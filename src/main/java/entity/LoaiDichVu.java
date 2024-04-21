@@ -1,14 +1,14 @@
 package entity;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Set;
-
 import enums.TrangThaiLoaiDichVu;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Set;
 
 @Entity
 @Table(name = "LoaiDichVu")

@@ -10,6 +10,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "KhuyenMai")
+@NamedQueries(
+        @NamedQuery(name = "findAll", query = "Select km from KhuyenMai km")
+)
 public class KhuyenMai {
     @Id
     private String maKhuyenMai;
@@ -113,5 +116,20 @@ public class KhuyenMai {
 
     public void setThoiDiemKetThuc(Time thoiDiemKetThuc) {
         this.thoiDiemKetThuc = thoiDiemKetThuc;
+    }
+
+    @Override
+    public String toString() {
+        return "KhuyenMai{" +
+                "maKhuyenMai='" + maKhuyenMai + '\'' +
+                ", tenKhuyenMai='" + tenKhuyenMai + '\'' +
+                ", phanTram=" + phanTram +
+                ", gioiHan=" + gioiHan +
+                ", ngayBatDau=" + ngayBatDau +
+                ", ngayKetThuc=" + ngayKetThuc +
+                ", thoiDiemBatDau=" + thoiDiemBatDau +
+                ", thoiDiemKetThuc=" + thoiDiemKetThuc +
+                ", hoaDon=" + hoaDon +
+                '}';
     }
 }

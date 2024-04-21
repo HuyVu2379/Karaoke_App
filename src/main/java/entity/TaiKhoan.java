@@ -1,14 +1,7 @@
 package entity;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Set;
-
 import enums.TrangThaiTaiKhoan;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 
 @Entity
@@ -18,7 +11,6 @@ public class TaiKhoan {
     private String maTaiKhoan;
     @Column(unique = true, nullable = false)
     private String tenTaiKhoan;
-    @Column(unique = true, nullable = false)
     private String matKhau;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

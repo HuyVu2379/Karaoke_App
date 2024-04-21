@@ -1,5 +1,8 @@
 package entity;
 
+import enums.TrangThaiLoaiPhong;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
-import enums.TrangThaiLoaiPhong;
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "LoaiPhong")

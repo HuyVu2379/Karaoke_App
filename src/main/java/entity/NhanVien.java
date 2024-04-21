@@ -1,28 +1,22 @@
 package entity;
 
+import enums.TrangThaiNhanVien;
+import jakarta.persistence.*;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
-
-import enums.TrangThaiNhanVien;
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "NhanVien")
 public class NhanVien {
     @Id
     private String maNhanVien;
-    @Column(unique = true, nullable = false)
     private String ten;
-    @Column(unique = true, nullable = false)
     private String chucVu;
-    @Column(unique = true, nullable = false)
     private String sdt;
-    @Column(unique = true, nullable = false)
     private String email;
-    @Column(unique = true, nullable = false)
     private String diaChi;
-    @Column(unique = true, nullable = false)
     @Enumerated(EnumType.STRING)
     private TrangThaiNhanVien trangThai;
 
