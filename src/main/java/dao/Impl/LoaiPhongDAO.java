@@ -1,75 +1,40 @@
 package dao.Impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import dao.LoaiPhongDao;
+import entity.LichSuGiaPhong;
+import entity.LoaiPhong;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
+
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-import connectDB.ConnectDB;
-import entity.LichSuGiaPhong;
-import entity.LoaiPhong;
+public class LoaiPhongDAO implements LoaiPhongDao {
+    EntityManager em;
 
-public class LoaiPhongDAO {
-	private ConnectDB connectDB;
+    public LoaiPhongDAO() throws RemoteException {
+		em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
+    }
 
-	public LoaiPhongDAO() {
-		this.connectDB = ConnectDB.getInstance();
-	}
+    public List<LoaiPhong> getAllLoaiPhong() throws RemoteException{
+      String query = "Select lp from LoaiPhong lp";
+            List<LoaiPhong> listLP = new ArrayList<LoaiPhong>();
+            listLP = em.createQuery(query).getResultList();
+            return listLP;
+    }
 
-	public List<LoaiPhong> getAllLoaiPhong() {
-		List<LoaiPhong> loaiPhongList = new ArrayList<>();
-		Connection connection = connectDB.getConnection();
-		String query = "SELECT * FROM LoaiPhongView";
+    public LoaiPhong getLoaiPhongByTen(String tenLoaiPhong) throws RemoteException{
+       LoaiPhong loaiPhong;
+       tenLoaiPhong = tenLoaiPhong.toLowerCase();
+       String query = "Select lp from LoaiPhong lp where lower(lp.tenLoaiPhong) =:tenLoaiPhong";
+       return  loaiPhong = (LoaiPhong) em.createQuery(query).setParameter("tenLoaiPhong", tenLoaiPhong).getSingleResult();
+    }
 
-		try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				LoaiPhong loaiPhong = new LoaiPhong(resultSet);
-
-				loaiPhongList.add(loaiPhong);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return loaiPhongList;
-	}
-
-	public LoaiPhong getLoaiPhongByTen(String tenLoaiPhong) {
-		LoaiPhong loaiPhong = null;
-		Connection connection = connectDB.getConnection();
-		String query = "SELECT * FROM LoaiPhongView WHERE LoaiPhong_TenLoaiPhong = ?";
-
-		try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-			preparedStatement.setString(1, tenLoaiPhong);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				loaiPhong = new LoaiPhong(resultSet);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return loaiPhong;
-	}
-
-	public List<LichSuGiaPhong> getLichSuGiaPhongByMaLoaiPhong(String maLoaiPhong) {
-		List<LichSuGiaPhong> lichSuLloaiPhong = new ArrayList<>();
-		Connection connection = connectDB.getConnection();
-		String query = "SELECT * FROM LichSuGiaPhongView WHERE LoaiPhong_MaLoaiPhong = ?";
-
-		try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-			preparedStatement.setString(1, maLoaiPhong);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				lichSuLloaiPhong.add(new LichSuGiaPhong(resultSet));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return lichSuLloaiPhong;
-	}
+    public List<LichSuGiaPhong> getLichSuGiaPhongByMaLoaiPhong(String maLoaiPhong) throws RemoteException{
+        String query = "Select lsgp from LichSuGiaPhong lsgp where lsgp.loaiPhong.maLoaiPhong =:maLoaiPhong";
+        List<LichSuGiaPhong> listLsgp = new ArrayList<LichSuGiaPhong>();
+        listLsgp = em.createQuery(query).setParameter("maLoaiPhong", maLoaiPhong).getResultList();
+        return listLsgp;
+    }
 }

@@ -1,39 +1,26 @@
 package dao.Impl;
 
-import connectDB.ConnectDB;
+import dao.LichSuGiaDichVuDao;
 import entity.LichSuGiaDichVu;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LichSuGiaDichVuDAO {
-    private ConnectDB connectDB;
+public class LichSuGiaDichVuDAO implements LichSuGiaDichVuDao {
+    private EntityManager em;
 
     public LichSuGiaDichVuDAO() {
-        this.connectDB = ConnectDB.getInstance();
+        em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
     }
+
+    @Override
     public List<LichSuGiaDichVu> getLichSuGiaDichVuByMaDichVu(String maDichVu) {
-        List<LichSuGiaDichVu> lichSuGiaDichVuList = new ArrayList<>();
-        Connection connection = connectDB.getConnection();
-        String query = "{CALL GetLichSuGiaDichVuByMaDichVu(?)}";
-
-        try (CallableStatement statement = connection.prepareCall(query)) {
-            statement.setString(1, maDichVu);
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                LichSuGiaDichVu lichSuGiaDichVu = new LichSuGiaDichVu(resultSet);
-                lichSuGiaDichVuList.add(lichSuGiaDichVu);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return lichSuGiaDichVuList;
+        List<LichSuGiaDichVu> list = new ArrayList<LichSuGiaDichVu>();
+        String query = "Select lsgdv from LichSuGiaDichVu lsgdv where lsgdv.dichVu.maDichVu = :maDichVu";
+        list = em.createQuery(query).setParameter("maDichVu", maDichVu).getResultList();
+        return list;
     }
 
 }
