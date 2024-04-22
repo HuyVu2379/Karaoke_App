@@ -117,6 +117,7 @@ public class PhongImpl implements PhongDAO {
 
     @Override
     public boolean updateRoomStatus(String maHoaDon, String maPhong) {
+        tx = em.getTransaction();
         return false;
     }
 }

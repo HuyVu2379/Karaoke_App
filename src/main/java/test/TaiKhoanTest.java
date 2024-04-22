@@ -21,4 +21,3 @@ public class TaiKhoanTest {
            System.out.println(taiKhoanDAO.getTaiKhoan("luongtandat", "Dat123456@"));
     }
 }
-s
