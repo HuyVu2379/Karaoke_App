@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "DichVu")
@@ -23,15 +22,16 @@ public class DichVu {
     @JoinColumn(name = "maLoaiDichVu")
     private LoaiDichVu loaiDichVu;
     @OneToMany(mappedBy = "dichVu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<ChiTietDatDichVu> chiTietDatDichVu;
+    private List<ChiTietDatDichVu> chiTietDatDichVu;
     @OneToMany(mappedBy = "dichVu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<LichSuGiaDichVu> lichSuGiaDichVuList;
 
-    public Set<ChiTietDatDichVu> getChiTietDatDichVu() {
+    public List<ChiTietDatDichVu> getChiTietDatDichVu() {
         return chiTietDatDichVu;
     }
 
-    public void setChiTietDatDichVu(Set<ChiTietDatDichVu> chiTietDatDichVu) {
+
+    public void setChiTietDatDichVu(List<ChiTietDatDichVu> chiTietDatDichVu) {
         this.chiTietDatDichVu = chiTietDatDichVu;
     }
 
@@ -153,4 +153,5 @@ public class DichVu {
                 ", lichSuGiaDichVuList=" + lichSuGiaDichVuList +
                 '}';
     }
+
 }

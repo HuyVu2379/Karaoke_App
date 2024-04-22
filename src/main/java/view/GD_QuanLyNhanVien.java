@@ -1,18 +1,36 @@
 package view;
 
-import dao.Impl.NhanVienDAO;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import connectDB.ConnectDB;
+import dao.NhanVienDAO;
 import entity.NhanVien;
 import enums.TrangThaiNhanVien;
 
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.GridLayout;
 import java.awt.event.*;
-import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
+
+import java.awt.Component;
+import java.awt.Dimension;
+
+import javax.swing.border.LineBorder;
+import javax.swing.border.EtchedBorder;
+import java.awt.FlowLayout;
+
+import utils.*;
+
+import java.io.File;
 
 public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
 

@@ -1,10 +1,12 @@
 package view;
 
 import com.toedter.calendar.JDateChooser;
-import dao.Impl.KhachHangDAO;
-import dao.Impl.LoaiPhongDAO;
-import dao.Impl.PhieuDatPhongDAO;
-import dao.Impl.PhongDAO;
+import dao.Impl.PhieuDatPhongImpl;
+import dao.Impl.PhongImpl;
+import dao.KhachHangDAO;
+import dao.LoaiPhongDAO;
+import dao.PhieuDatPhongDAO;
+import dao.PhongDAO;
 import entity.KhachHang;
 import entity.LoaiPhong;
 import entity.NhanVien;
@@ -55,10 +57,10 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
 
     public GD_DatPhongCho(NhanVien currentNhanVien) {
         nhanVien = currentNhanVien;
-        phongDAO = new PhongDAO();
+        phongDAO = new PhongImpl();
         loaiPhongDAO = new LoaiPhongDAO();
         khachHangDAO = new KhachHangDAO();
-        phieuDatPhongDAO = new PhieuDatPhongDAO();
+        phieuDatPhongDAO = new PhieuDatPhongImpl();
         initGUI();
     }
 
@@ -346,7 +348,7 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
     }
 
     private void initData() {
-        listPhong = phongDAO.getAllPhongTrong();
+        listPhong = phongDAO.getAllVacantRoom();
     }
 
     private void loadRooms(List<Phong> newRooms) {
@@ -405,7 +407,7 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
             }
         }
         if (o.equals(btnSearch)) {
-            listPhong = phongDAO.GetPhongByTenAndLoaiPhong(txtNameRoom.getText(), (LoaiPhong) cbType.getSelectedItem());
+            listPhong = phongDAO.getRoomByNameAndType(txtNameRoom.getText(), (LoaiPhong) cbType.getSelectedItem());
             loadRooms(listPhong);
         }
         if (o.equals(rbtnToday)) {

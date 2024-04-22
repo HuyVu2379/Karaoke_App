@@ -1,12 +1,20 @@
 package view;
 
-import dao.Impl.TaiKhoanDAO;
-import entity.TaiKhoan;
+import java.awt.EventQueue;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
+import javax.swing.border.EmptyBorder;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.TextField;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import dao.Impl.TaiKhoanImpl;
+import dao.TaiKhoanDAO;
+import entity.TaiKhoan;
+import utils.*;
 
 public class GD_Login extends JFrame {
 
@@ -29,7 +37,7 @@ public class GD_Login extends JFrame {
     }
 
     public GD_Login() {
-        dao = new TaiKhoanDAO();
+        dao = new TaiKhoanImpl();
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(700, 700);

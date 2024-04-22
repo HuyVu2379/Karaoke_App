@@ -1,15 +1,18 @@
-package dao.Impl;
+package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import connectDB.ConnectDB;
+import entity.LoaiPhong;
 import entity.NhanVien;
 import enums.TrangThaiNhanVien;
+import view.GD_QuanLyNhanVien;
 
 public class NhanVienDAO {
     private ConnectDB connectDB;

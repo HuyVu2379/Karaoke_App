@@ -1,4 +1,4 @@
-package dao.Impl;
+package dao;
 
 import connectDB.ConnectDB;
 import entity.LichSuGiaDichVu;

@@ -1,18 +1,46 @@
 package view;
 
-import dao.Impl.PhieuDatPhongDAO;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.Button;
 
-import javax.swing.*;
-import javax.swing.border.EtchedBorder;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+
+import dao.Impl.PhieuDatPhongImpl;
+import dao.PhieuDatPhongDAO;
+import entity.PhieuDatPhong;
+import entity.Phong;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.ProcessHandle.Info;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+
+import java.awt.Color;
+import javax.swing.JTextField;
+import java.awt.FlowLayout;
+import javax.swing.border.EtchedBorder;
 
 public class GD_HuyDatPhongCho extends JPanel implements ActionListener {
 	private DefaultTableModel model;
@@ -27,7 +55,7 @@ public class GD_HuyDatPhongCho extends JPanel implements ActionListener {
 
 	public GD_HuyDatPhongCho() {
 		setBackground(new Color(255, 255, 255));
-		pdpDAO = new PhieuDatPhongDAO();
+		pdpDAO = new PhieuDatPhongImpl();
 		setSize(1000, 700);
 		BorderLayout borderLayout = new BorderLayout();
 		borderLayout.setVgap(10);

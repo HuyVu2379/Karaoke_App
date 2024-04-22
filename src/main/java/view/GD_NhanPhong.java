@@ -1,9 +1,11 @@
 package view;
 
-import dao.Impl.KhachHangDAO;
-import dao.Impl.LoaiPhongDAO;
-import dao.Impl.PhieuDatPhongDAO;
-import dao.Impl.PhongDAO;
+import dao.Impl.PhieuDatPhongImpl;
+import dao.Impl.PhongImpl;
+import dao.KhachHangDAO;
+import dao.LoaiPhongDAO;
+import dao.PhieuDatPhongDAO;
+import dao.PhongDAO;
 import entity.HoaDon;
 import entity.KhachHang;
 import entity.PhieuDatPhong;
@@ -36,9 +38,9 @@ public class GD_NhanPhong extends JPanel implements ActionListener {
 
     public GD_NhanPhong() {
         khachHangDAO = new KhachHangDAO();
-        phongDAO = new PhongDAO();
+        phongDAO = new PhongImpl();
         loaiPhongDAO = new LoaiPhongDAO();
-        phieuDatPhongDAO = new PhieuDatPhongDAO();
+        phieuDatPhongDAO = new PhieuDatPhongImpl();
         initGUI();
     }
 
@@ -225,7 +227,7 @@ public class GD_NhanPhong extends JPanel implements ActionListener {
 
                 HoaDon updateHoaDon = updateHoaDonContainer[0];
 
-                invoice = phongDAO.updateTrangThaiPhong(updateHoaDon.getMaHoaDon(), maPhong);
+                invoice = phongDAO.updateRoomStatus(updateHoaDon.getMaHoaDon(), maPhong);
                 if (invoice) {
                     JOptionPane.showMessageDialog(this, "Nhận phòng thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 } else {
@@ -241,7 +243,7 @@ public class GD_NhanPhong extends JPanel implements ActionListener {
             int reply = JOptionPane.showConfirmDialog(this, "Bạn có muốn nhận toàn bộ phòng", "Thông báo", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
                 list.forEach(invoice -> {
-                    phongDAO.updateTrangThaiPhong(invoice.getMaHoaDon(), invoice.getPhieuDatPhongList().get(0).getPhong().getMaPhong());
+                    phongDAO.updateRoomStatus(invoice.getMaHoaDon(), invoice.getPhieuDatPhongList().get(0).getPhong().getMaPhong());
                 });
                 JOptionPane.showMessageDialog(this, "Nhận phòng thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 loadData();

@@ -1,6 +1,7 @@
 package entity;
 
 import enums.TrangThaiLoaiPhong;
+import enums.TrangThaiPhong;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -22,7 +23,7 @@ public class LoaiPhong implements Serializable {
 	private TrangThaiLoaiPhong trangThai;
 
 	@OneToMany(mappedBy = "loaiPhong", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Phong> phong;
+	private List<Phong> phong;
 
 	@OneToMany(mappedBy = "loaiPhong", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<LichSuGiaPhong> lichSuGiaPhongList;

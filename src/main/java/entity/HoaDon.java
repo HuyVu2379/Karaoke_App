@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -30,7 +32,7 @@ public class HoaDon {
     @JoinColumn(name = "maKhuyenMai")
     private KhuyenMai khuyenMai;
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<PhieuDatPhong> phieuDatPhongList;
+    private List<PhieuDatPhong> phieuDatPhongList;
 
     public HoaDon() {
     }
@@ -44,7 +46,7 @@ public class HoaDon {
         this.khachHang = khachHang;
         this.nhanVien = nhanVien;
         this.khuyenMai = khuyenMai;
-        this.phieuDatPhongList = new HashSet<>();
+        this.phieuDatPhongList = new ArrayList<>();
     }
 
     public HoaDon(ResultSet rs) throws SQLException {
@@ -55,7 +57,7 @@ public class HoaDon {
         this.khachHang = new KhachHang(rs);
         this.nhanVien = new NhanVien(rs);
         this.khuyenMai = new KhuyenMai(rs);
-        this.phieuDatPhongList = new HashSet<>();
+        this.phieuDatPhongList = new ArrayList<>();
     }
 
     public String getMaHoaDon() {
@@ -114,11 +116,11 @@ public class HoaDon {
         this.khuyenMai = khuyenMai;
     }
 
-    public Set<PhieuDatPhong> getPhieuDatPhongList() {
+    public List<PhieuDatPhong> getPhieuDatPhongList() {
         return phieuDatPhongList;
     }
 
-    public void setPhieuDatPhongList(Set<PhieuDatPhong> phieuDatPhongList) {
+    public void setPhieuDatPhongList(List<PhieuDatPhong> phieuDatPhongList) {
         this.phieuDatPhongList = phieuDatPhongList;
     }
 

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,10 +22,10 @@ public class NhanVien {
     private TrangThaiNhanVien trangThai;
 
     @OneToMany(mappedBy = "nhanVien", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<TaiKhoan> taiKhoan;
+    private List<TaiKhoan> taiKhoan;
 
     @OneToMany(mappedBy = "nhanVien", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<HoaDon> hoaDon;
+    private List<HoaDon> hoaDon;
 
     public NhanVien() {
     }
@@ -106,19 +107,19 @@ public class NhanVien {
         this.trangThai = trangThai;
     }
 
-    public Set<TaiKhoan> getTaiKhoan() {
+    public List<TaiKhoan> getTaiKhoan() {
         return taiKhoan;
     }
 
-    public void setTaiKhoan(Set<TaiKhoan> taiKhoan) {
+    public void setTaiKhoan(List<TaiKhoan> taiKhoan) {
         this.taiKhoan = taiKhoan;
     }
 
-    public Set<HoaDon> getHoaDon() {
+    public List<HoaDon> getHoaDon() {
         return hoaDon;
     }
 
-    public void setHoaDon(Set<HoaDon> hoaDon) {
+    public void setHoaDon(List<HoaDon> hoaDon) {
         this.hoaDon = hoaDon;
     }
 

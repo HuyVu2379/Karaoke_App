@@ -1,22 +1,42 @@
 package view;
 
-import dao.Impl.LoaiPhongDAO;
-import dao.Impl.PhongDAO;
-import entity.LoaiPhong;
-import entity.Phong;
-import enums.TrangThaiPhong;
-import utils.PhongPanelClickListener;
-import utils.RoomPanelUtil;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+
+import dao.Impl.PhongImpl;
+import dao.LoaiPhongDAO;
+import dao.PhongDAO;
+import entity.LoaiPhong;
+import entity.Phong;
+import enums.TrangThaiLoaiPhong;
+import enums.TrangThaiPhong;
+import utils.PhongPanelClickListener;
+import utils.RoomPanelUtil;
 
 public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanelClickListener {
     private JPanel pnNorth, pnCenter, pnSouth, pnInfo, pnFind, pnListRoom;
@@ -218,12 +238,12 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
 
     private void initRoomData() {
         listPhong = new ArrayList<>();
-        dao = new PhongDAO();
+        dao = new PhongImpl();
         listPhong = getAllRoom();
     }
 
     private List<Phong> getAllRoom() {
-        return dao.getAllPhong();
+        return dao.getAllRoom();
     }
 
     private void createListRoom() {
@@ -300,7 +320,7 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
     }
 
     private void capNhatPhong(Phong phong) {
-        if (dao.updatePhong(phong) != 0) {
+        if (dao.updateRoom(phong)) {
             List<Phong> rooms = getAllRoom();
             loadRoom(rooms);
             JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
@@ -309,7 +329,7 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
     }
 
     private void themPhong(Phong phong) {
-        if (dao.addNewPhong(phong) != 0) {
+        if (dao.addRoom(phong)) {
             List<Phong> rooms = getAllRoom();
             loadRoom(rooms);
             JOptionPane.showMessageDialog(this, "Thêm thành công!");
@@ -323,26 +343,26 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
             List<Phong> rooms = getAllRoom();
             loadRoom(rooms);
         } else if (cmbLoaiTimKiem.getSelectedIndex() == 1) {
-            List<Phong> rooms = dao.getPhongByTrangThai(0);
+            List<Phong> rooms = dao.getRoomByStatus("");
             loadRoom(rooms);
         } else if (cmbLoaiTimKiem.getSelectedIndex() == 2) {
-            List<Phong> rooms = dao.getPhongByTrangThai(1);
+            List<Phong> rooms = dao.getRoomByStatus("");
             loadRoom(rooms);
         } else if (cmbLoaiTimKiem.getSelectedIndex() == 3) {
-            List<Phong> rooms = dao.getPhongByTrangThai(2);
+            List<Phong> rooms = dao.getRoomByStatus("");
             loadRoom(rooms);
         } else if (cmbLoaiTimKiem.getSelectedIndex() == 4) {
-            List<Phong> rooms = dao.getPhongByTrangThai(3);
+            List<Phong> rooms = dao.getRoomByStatus("");
             loadRoom(rooms);
         } else if (cmbLoaiTimKiem.getSelectedIndex() == 5) {
-            List<Phong> rooms = dao.GetPhongByLoaiPhong(daoLoaiPhong.getLoaiPhongByTen("Phòng thường"));
+            List<Phong> rooms = dao.getRoomByType(daoLoaiPhong.getLoaiPhongByTen("Phòng thường"));
             loadRoom(rooms);
         } else if (cmbLoaiTimKiem.getSelectedIndex() == 6) {
-            List<Phong> rooms = dao.GetPhongByLoaiPhong(daoLoaiPhong.getLoaiPhongByTen("Phòng vip"));
+            List<Phong> rooms = dao.getRoomByType(daoLoaiPhong.getLoaiPhongByTen("Phòng vip"));
             loadRoom(rooms);
         } else if (cmbLoaiTimKiem.getSelectedIndex() == 7) {
             if (!(txtTuKhoaTim.getText().equalsIgnoreCase(""))) {
-                List<Phong> rooms = dao.getPhongByTen(txtTuKhoaTim.getText());
+                List<Phong> rooms = dao.getRoomByName(txtTuKhoaTim.getText());
                 loadRoom(rooms);
             } else {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập tên phòng!");

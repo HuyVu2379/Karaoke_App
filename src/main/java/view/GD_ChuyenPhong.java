@@ -1,8 +1,10 @@
 package view;
 
-import dao.Impl.LoaiPhongDAO;
-import dao.Impl.PhieuDatPhongDAO;
-import dao.Impl.PhongDAO;
+import dao.Impl.PhieuDatPhongImpl;
+import dao.Impl.PhongImpl;
+import dao.LoaiPhongDAO;
+import dao.PhieuDatPhongDAO;
+import dao.PhongDAO;
 import entity.HoaDon;
 import entity.LoaiPhong;
 import entity.PhieuDatPhong;
@@ -33,7 +35,7 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
     private JTextField txtCurrentRoomName;
     private JTextField txtCurrentRoomPrice;
     private JTextField txtCurrentRoomType;
-    private PhongDAO phongDao = new PhongDAO();
+    private PhongDAO phongDao = new PhongImpl();
     private LoaiPhongDAO loaiPhongDao;
     private JComboBox<LoaiPhong> cbTypeRoom;
     private JButton btnFind;
@@ -56,7 +58,7 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
         phong = selectedPhong;
         hoaDon = currentHoaDon;
         loaiPhongDao = new LoaiPhongDAO();
-        phieuDatPhongDAO = new PhieuDatPhongDAO();
+        phieuDatPhongDAO = new PhieuDatPhongImpl();
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
         setSize(784, 600);
@@ -266,7 +268,7 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
     }
 
     private void initData() {
-        rooms = validRoom(phongDao.getPhongLoaiPhongLichSuaGiaByConditionTime());
+        rooms = validRoom(phongDao.getRoomLoaiPhongLichSuaGiaByConditionTime());
 
         List<LoaiPhong> loaiPhongList = loaiPhongDao.getAllLoaiPhong();
         cbTypeRoom.addItem((new LoaiPhong(null, "tất cả", TrangThaiLoaiPhong.HIEU_LUC)));
@@ -390,7 +392,7 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnFind)) {
-            rooms = validRoom(phongDao.GetPhongByTenAndLoaiPhong(txtRoomName.getText(), (LoaiPhong) cbTypeRoom.getSelectedItem()));
+            rooms = validRoom(phongDao.getRoomByNameAndType(txtRoomName.getText(), (LoaiPhong) cbTypeRoom.getSelectedItem()));
             loadRooms(rooms);
         } else if (o.equals(btnApply)) {
             if(!(txtFollowRoomName.getText().length() > 0)){

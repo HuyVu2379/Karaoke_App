@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,13 +20,13 @@ public class LoaiDichVu {
     private TrangThaiLoaiDichVu trangThai;
 
     @OneToMany(mappedBy = "loaiDichVu")
-    private Set<DichVu> dichVu;
+    private List<DichVu> dichVu;
 
-    public Set<DichVu> getDichVu() {
+    public List<DichVu> getDichVu() {
         return dichVu;
     }
 
-    public void setDichVu(Set<DichVu> dichVu) {
+    public void setDichVu(List<DichVu> dichVu) {
         this.dichVu = dichVu;
     }
 

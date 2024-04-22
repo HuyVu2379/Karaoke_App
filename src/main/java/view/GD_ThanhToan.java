@@ -1,7 +1,8 @@
 package view;
 
-import dao.Impl.KhuyenMaiDAO;
-import dao.Impl.PhieuDatPhongDAO;
+import dao.Impl.PhieuDatPhongImpl;
+import dao.KhuyenMaiDAO;
+import dao.PhieuDatPhongDAO;
 import entity.*;
 import utils.FormatCurrencyUtil;
 import utils.PdfExportUtil;
@@ -41,11 +42,23 @@ public class GD_ThanhToan extends JFrame implements ActionListener {
     private final KhuyenMaiDAO khuyenMaiDAO;
     private final PhieuDatPhongDAO phieuDatPhongDao;
 
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    GD_ThanhToan frame = new GD_ThanhToan(null, null);
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
     public GD_ThanhToan(List<HoaDon> hoaDon, NhanVien currentNhanVien) {
         hoaDonList = hoaDon;
         hoaDonList.forEach(currentHoaDon -> currentHoaDon.getPhieuDatPhongList().get(currentHoaDon.getPhieuDatPhongList().size() - 1).setThoiGianKetThuc(new Time(System.currentTimeMillis())));
         khuyenMaiDAO = new KhuyenMaiDAO();
-        phieuDatPhongDao = new PhieuDatPhongDAO();
+        phieuDatPhongDao = new PhieuDatPhongImpl();
         nhanVien = currentNhanVien;
         khachHang = hoaDon.get(0).getKhachHang();
         createGUI();

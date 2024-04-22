@@ -1,13 +1,5 @@
 package view;
 
-import dao.Impl.KhachHangDAO;
-import dao.Impl.PhieuDatPhongDAO;
-import entity.KhachHang;
-import entity.NhanVien;
-import entity.Phong;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +9,26 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import dao.Impl.PhieuDatPhongImpl;
+import dao.KhachHangDAO;
+import dao.PhieuDatPhongDAO;
+import entity.KhachHang;
+import entity.NhanVien;
+import entity.Phong;
+
+import javax.swing.JRadioButton;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
 
 public class GD_DatPhong extends JFrame implements ActionListener {
 
@@ -33,11 +45,12 @@ public class GD_DatPhong extends JFrame implements ActionListener {
     private NhanVien nhanVien;
     private JTable table;
 
+
     public GD_DatPhong(List<Phong> selectedPhong, NhanVien currentNhanVien) {
         phong = selectedPhong;
         nhanVien = currentNhanVien;
         khachHangDAO = new KhachHangDAO();
-        phieuDatPhongDAO = new PhieuDatPhongDAO();
+        phieuDatPhongDAO = new PhieuDatPhongImpl();
         createGUI();
     }
 

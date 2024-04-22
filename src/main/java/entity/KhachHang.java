@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,7 +19,7 @@ public class KhachHang {
     private String sdt;
 
     @OneToMany(mappedBy = "khachHang")
-    private Set<HoaDon> hoaDon;
+    private List<HoaDon> hoaDon;
 
 
     public KhachHang() {
@@ -61,11 +62,11 @@ public class KhachHang {
         this.sdt = sdt;
     }
 
-    public Set<HoaDon> getHoaDon() {
+    public List<HoaDon> getHoaDon() {
         return hoaDon;
     }
 
-    public void setHoaDon(Set<HoaDon> hoaDon) {
+    public void setHoaDon(List<HoaDon> hoaDon) {
         this.hoaDon = hoaDon;
     }
 }

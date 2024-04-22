@@ -1,9 +1,10 @@
 package view;
 
-import dao.Impl.ChiTietDatDichVuDAO;
-import dao.Impl.DichVuDAO;
-import dao.Impl.HoaDonDAO;
-import dao.Impl.PhieuDatPhongDAO;
+import dao.ChiTietDatDichVuDAO;
+import dao.DichVuDAO;
+import dao.HoaDonDAO;
+import dao.Impl.PhieuDatPhongImpl;
+import dao.PhieuDatPhongDAO;
 import entity.*;
 import utils.DichVuPanelClickListener;
 import utils.FormatCurrencyUtil;
@@ -12,10 +13,7 @@ import utils.RoomPanelUtil;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +42,7 @@ public class GD_DatDichVu extends JFrame implements DichVuPanelClickListener, Ac
         dichVuDAO = new DichVuDAO();
         this.phong = phong;
         chiTietDatDichVuDAO = new ChiTietDatDichVuDAO();
-        phieuDatPhongDAO = new PhieuDatPhongDAO();
+        phieuDatPhongDAO = new PhieuDatPhongImpl();
         hoaDonDAO = new HoaDonDAO();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 700);

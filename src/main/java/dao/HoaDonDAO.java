@@ -1,6 +1,7 @@
-package dao.Impl;
+package dao;
 
 import connectDB.ConnectDB;
+import dao.Impl.PhieuDatPhongImpl;
 import entity.HoaDon;
 import entity.NhanVien;
 import entity.PhieuDatPhong;
@@ -15,7 +16,7 @@ public class HoaDonDAO {
     private final ChiTietDatDichVuDAO chiTietDatDichVuDAO;
 
     public HoaDonDAO() {
-        phieuDatPhongDAO = new PhieuDatPhongDAO();
+        phieuDatPhongDAO = new PhieuDatPhongImpl();
         chiTietDatDichVuDAO = new ChiTietDatDichVuDAO();
         this.connectDB = ConnectDB.getInstance();
     }
