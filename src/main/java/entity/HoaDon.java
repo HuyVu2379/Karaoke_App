@@ -2,6 +2,7 @@ package entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +16,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "HoaDon")
-public class HoaDon {
+public class HoaDon implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     private String maHoaDon;
     private double tongTien;
@@ -32,7 +34,7 @@ public class HoaDon {
     @JoinColumn(name = "maKhuyenMai")
     private KhuyenMai khuyenMai;
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<PhieuDatPhong> phieuDatPhongList;
+    private static List<PhieuDatPhong> phieuDatPhongList;
 
     public HoaDon() {
     }
@@ -116,7 +118,7 @@ public class HoaDon {
         this.khuyenMai = khuyenMai;
     }
 
-    public List<PhieuDatPhong> getPhieuDatPhongList() {
+    public static List<PhieuDatPhong> getPhieuDatPhongList() {
         return phieuDatPhongList;
     }
 

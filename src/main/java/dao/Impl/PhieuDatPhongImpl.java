@@ -19,7 +19,6 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
 import java.sql.Date;
-import java.sql.SQLException;
 import java.sql.Time;
 import java.util.List;
 
@@ -36,19 +35,16 @@ public class PhieuDatPhongImpl implements PhieuDatPhongDAO {
         tx = em.getTransaction();
         try {
             tx.begin();
-            em.createNativeQuery("CALL BookKaraokeRoom(:maKhachHang, :maNhanVien, :maPhong, :thoiGianBatDau, :ngayThanhToan)")
-                    .setParameter("maKhachHang", maKhachHang)
-                    .setParameter("maNhanVien", maNhanVien)
-                    .setParameter("maPhong", maPhong)
-                    .setParameter("thoiGianBatDau", thoiGianBatDau)
-                    .setParameter("ngayThanhToan", ngayThanhToan)
+            em.createNativeQuery("{CALL BookKaraokeRoom(?,?, ?, ?, ?)}")
+                    .setParameter(1, maKhachHang)
+                    .setParameter(2, maNhanVien)
+                    .setParameter(3, maPhong)
+                    .setParameter(4, thoiGianBatDau)
+                    .setParameter(5, ngayThanhToan)
                     .executeUpdate();
             tx.commit();
             return true;
         } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
             e.printStackTrace();
             return false;
         }
@@ -56,41 +52,107 @@ public class PhieuDatPhongImpl implements PhieuDatPhongDAO {
 
     @Override
     public List<PhieuDatPhong> getPhieuDatPhongByMaHoaDon(String maHoaDon) {
-        return null;
+        String query = "{call GetPhieuDatPhongByMaHoaDon(?)}";
+        return em.createNativeQuery(query, PhieuDatPhong.class)
+                .setParameter(1, maHoaDon)
+                .getResultList();
     }
 
     @Override
     public boolean updatePaymentDetails(HoaDon hoaDon) {
-        return false;
+        tx = em.getTransaction();
+        String query = "{CALL UpdatePaymentDetails(?, ?, ?, ?, ?, ?)}";
+        try {
+            tx.begin();
+            em.createNativeQuery(query, HoaDon.class)
+                    .setParameter(1, hoaDon.getMaHoaDon())
+                    .setParameter(2, hoaDon.getTongTien())
+                    .setParameter(3, hoaDon.getThoiDiemThanhToan())
+                    .setParameter(4, hoaDon.getPhieuDatPhongList().get(HoaDon.getPhieuDatPhongList().size() - 1).getMaPhieuDatPhong())
+                    .setParameter(5, hoaDon.getPhieuDatPhongList().get(hoaDon.getPhieuDatPhongList().size() - 1).getThoiGianKetThuc())
+                    .setParameter(6, hoaDon.getKhuyenMai().getMaKhuyenMai())
+                    .executeUpdate();
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean bookRoomBefore(String maKhachHang, String maNhanVien, String maPhong, Time thoiGianBatDau, Date ngayThanhToan) {
-        return false;
+        String query = "{CALL BookRoomBefore(?, ?, ?, ?, ?)}";
+        tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.createNativeQuery(query)
+                    .setParameter(1, maKhachHang)
+                    .setParameter(2, maNhanVien)
+                    .setParameter(3, maPhong)
+                    .setParameter(4, thoiGianBatDau)
+                    .setParameter(5, ngayThanhToan)
+                    .executeUpdate();
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean changeRoom(PhieuDatPhong phieuDatPhong) {
-        return false;
+        String query = "{CALL ChangeKarokeRoom(?, ?)}";
+        tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.createNativeQuery(query)
+                    .setParameter(1, phieuDatPhong.getMaPhieuDatPhong())
+                    .setParameter(2, phieuDatPhong.getPhong().getMaPhong())
+                    .executeUpdate();
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public List<String[]> getDanhSachPhieu() {
-        return null;
+        String sql = "SELECT * FROM DanhSachPhieu_View";
+        return em.createNativeQuery(sql).getResultList();
     }
 
     @Override
     public void xoaPhieuDatPhongCho(String maHoaDon) {
-
+        String query = "{CALL XoaPhieuDatPhongCho(?)}";
+        tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.createNativeQuery(query)
+                    .setParameter(1, maHoaDon)
+                    .executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<String[]> timKiemPhieuDatPhong(String sdt) {
-        return null;
+        String query = "SELECT * FROM DanhSachPhieu_View WHERE sdt LIKE ?";
+        return em.createNativeQuery(query)
+                .setParameter(1, sdt)
+                .getResultList();
     }
 
     @Override
     public List<HoaDon> getHoaDonBySDTAndTime(String soDienThoaiKhachHang) {
-        return null;
+        String query = "{CALL GetHoaDonBySDTAndTime(?)}";
+        return em.createNativeQuery(query, HoaDon.class)
+                .setParameter(1, soDienThoaiKhachHang)
+                .getResultList();
     }
 }
