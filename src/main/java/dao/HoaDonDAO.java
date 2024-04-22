@@ -1,4 +1,4 @@
-package implDao;
+package dao;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -23,6 +23,6 @@ public interface HoaDonDAO extends Remote {
 	public HoaDon getHoaDonByMaPhong(String maPhong) throws RemoteException;
 
 	public HoaDon getHoaDonByMaHoaDon(String maHd) throws RemoteException;
-	
-	
+
+
 }

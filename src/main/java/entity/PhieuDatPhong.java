@@ -2,17 +2,71 @@ package entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "PhieuDatPhong")
-public class PhieuDatPhong {
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "callBookKaraokeRoom",
+                query = "CALL BookKaraokeRoom(:maKhachHang, :maNhanVien, :maPhong, :thoiGianBatDau, :ngayThanhToan)",
+                resultClass = PhieuDatPhong.class
+        ),
+        @NamedNativeQuery(
+                name = "callGetPhieuDatPhongByMaHoaDon(:maHoaDon)",
+                query = "CALL GetPhieuDatPhongByMaHoaDon(:maHoaDon)",
+                resultClass = PhieuDatPhong.class
+        ),
+        @NamedNativeQuery(
+                name = "callUpdatePaymentDetails",
+                query = "CALL UpdatePaymentDetails(:maHoaDon,:tongtien,:thoidiemthanhtoan,:maPhieuDatPhong,:thoigianketthuc,:makhuyenmais)",
+                resultClass = PhieuDatPhong.class
+        ),
+        @NamedNativeQuery(
+                name = "callBookRoomBefore",
+                query = "CALL BookRoomBefore(:maKhachHang, :maNhanVien, :maPhong, :thoiGianBatDau, :ngayThanhToan)",
+                resultClass = PhieuDatPhong.class
+        ),
+        @NamedNativeQuery(
+                name = "callChangeRoom",
+                query = "CALL ChangeKarokeRoom(:maHoaDon, :maPhong)",
+                resultClass = PhieuDatPhong.class
+        ),
+        @NamedNativeQuery(
+                name = "getDanhSachPhieu",
+                query = "SELECT * FROM PhieuDatPhong_View",
+                resultClass = PhieuDatPhong.class
+        ),
+        @NamedNativeQuery(
+                name = "deletePhieuDatPhongCho",
+                query = "CALL DeletePhieuDatPhongCho(:maHoaDon)",
+                resultClass = PhieuDatPhong.class
+        ),
+        @NamedNativeQuery(
+                name = "findByPhieuDatPhong",
+                query = "SELECT * FROM PhieuDatPhong WHERE sdt = :soDienThoai",
+                resultClass = PhieuDatPhong.class
+        ),
+        @NamedNativeQuery(
+                name = "getHoaDonBySDTAndTime",
+                query = "CALL GetHoaDonBySDTAndTime(:soDienThoai)",
+                resultClass = PhieuDatPhong.class
+        )
+
+
+})
+public class PhieuDatPhong implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     private String maPhieuDatPhong;
     private Time thoiGianBatDau;
@@ -26,7 +80,7 @@ public class PhieuDatPhong {
     private Phong phong;
 
     @OneToMany(mappedBy = "phieuDatPhong", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<ChiTietDatDichVu> chiTietDatDichVuList;
+    private List<ChiTietDatDichVu> chiTietDatDichVuList;
 
     public PhieuDatPhong() {
     }
@@ -38,7 +92,7 @@ public class PhieuDatPhong {
         this.thoiGianKetThuc = thoiGianKetThuc;
         this.hoaDon = hoaDon;
         this.phong = phong;
-        chiTietDatDichVuList = new HashSet<>();
+        chiTietDatDichVuList = new ArrayList<>();
     }
 
     public PhieuDatPhong(ResultSet rs) throws SQLException {
@@ -46,7 +100,7 @@ public class PhieuDatPhong {
         this.thoiGianBatDau = rs.getTime("PhieuDatPhong_ThoiGianBatDau");
         this.thoiGianKetThuc = rs.getTime("PhieuDatPhong_ThoiGianKetThuc");
         this.phong = new Phong(rs);
-        chiTietDatDichVuList = new HashSet<>();
+        chiTietDatDichVuList = new ArrayList<>();
     }
 
     public String getMaPhieuDatPhong() {
@@ -89,11 +143,11 @@ public class PhieuDatPhong {
         this.phong = phong;
     }
 
-    public Set<ChiTietDatDichVu> getChiTietDatDichVuList() {
+    public List<ChiTietDatDichVu> getChiTietDatDichVuList() {
         return chiTietDatDichVuList;
     }
 
-    public void setChiTietDatDichVuList(Set<ChiTietDatDichVu> chiTietDatDichVuList) {
+    public void setChiTietDatDichVuList(List<ChiTietDatDichVu> chiTietDatDichVuList) {
         this.chiTietDatDichVuList = chiTietDatDichVuList;
     }
 

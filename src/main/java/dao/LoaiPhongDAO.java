@@ -1,4 +1,4 @@
-package dao.Impl;
+package dao;
 
 import dao.LoaiPhongDao;
 import entity.LichSuGiaPhong;

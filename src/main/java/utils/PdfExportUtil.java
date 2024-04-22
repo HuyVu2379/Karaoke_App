@@ -44,7 +44,7 @@ public class PdfExportUtil {
                 PdfWriter.getInstance(document, fileOutputStream);
                 document.open();
 
-                addHeader(document, "Karaoke NNice", "Gò Vấp", "0123456789");
+                addHeader(document, "Karaoke Nice", "Gò Vấp", "0123456789");
                 addBillInfo(document, invoice);
                 addServiceOrder(document, invoice);
                 addTotalPrice(document, invoice);
@@ -145,6 +145,7 @@ public class PdfExportUtil {
             table.addCell(cell3.get());
             table.addCell(cell4.get());
         }
+    }
 
 //        invoice.getPhieuDatPhongList().forEach(phieuDatPhong -> {
 ////            int serviceOrdersLastIndex = phieuDatPhong.getChiTietDatDichVuList().size();
@@ -302,3 +303,4 @@ public class PdfExportUtil {
         return rentalTime + " hours";
     }
 }
+

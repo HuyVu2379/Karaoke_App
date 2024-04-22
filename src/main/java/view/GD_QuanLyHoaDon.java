@@ -1,12 +1,11 @@
 package view;
 
 import com.toedter.calendar.JDateChooser;
-import dao.Impl.HoaDonDAO;
+import dao.HoaDonDAO;
 import entity.ChiTietDatDichVu;
 import entity.HoaDon;
 import entity.PhieuDatPhong;
 import utils.FormatCurrencyUtil;
-import utils.PdfExportUtil;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -312,13 +311,13 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
         } else if (source == btnTimKiem) {
             handleSearch();
         } else if (source == btnXuatHoaDon) {
-            boolean success = PdfExportUtil.exportInvoiceToPdf(currentInvoice);
+//            boolean success = PdfExportUtil.exportInvoiceToPdf(currentInvoice);
 
-            if (success) {
-                JOptionPane.showMessageDialog(this, "In hóa đơn thành công!");
-            } else {
-                JOptionPane.showMessageDialog(this, "In hóa đơn thất bại!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+//            if (success) {
+//                JOptionPane.showMessageDialog(this, "In hóa đơn thành công!");
+//            } else {
+//                JOptionPane.showMessageDialog(this, "In hóa đơn thất bại!", "Error", JOptionPane.ERROR_MESSAGE);
+//            }
         }
     }
 
@@ -407,10 +406,10 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int selectRow = tableInvoiceDetail.getSelectedRow();
-                if (selectRow != -1) {
-                    List<ChiTietDatDichVu> chiTietDatDichVuList = currentInvoice.getPhieuDatPhongList().get(selectRow).getChiTietDatDichVuList();
-                    loadInvoiceServiceDetail(chiTietDatDichVuList);
-                }
+//                if (selectRow != -1) {
+//                    List<ChiTietDatDichVu> chiTietDatDichVuList = currentInvoice.getPhieuDatPhongList().get(selectRow).getChiTietDatDichVuList();
+//                    loadInvoiceServiceDetail(chiTietDatDichVuList);
+//                }
             }
         });
     }

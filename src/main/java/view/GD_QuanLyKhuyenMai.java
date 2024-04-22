@@ -1,25 +1,20 @@
 package view;
 
-import com.toedter.calendar.JDateChooser;
-import dao.Impl.KhuyenMaiDAO;
-import dao.KhuyenMaiDao;
-import entity.KhuyenMai;
+import java.awt.EventQueue;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.rmi.RemoteException;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import javax.swing.border.*;
+import javax.swing.table.*;
+import java.awt.event.*;
+import java.sql.*;
+import java.text.*;
+import java.util.*;
 import java.util.List;
+
+import com.toedter.calendar.JDateChooser;
+import dao.KhuyenMaiDAO;
+import entity.KhuyenMai;
 
 public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener {
 
@@ -31,7 +26,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener {
     private JButton btnThem, btnCapNhat, btnXoaTrangThongTin, btnXoaTrangTacVu, btnTimKiem;
     private JDateChooser txtTimKiemNgayBatDau, txtTimKiemNgayKetThuc, txtNgayKetThuc, txtNgayBatDau;
     private List<KhuyenMai> list = new ArrayList<>();
-    private KhuyenMaiDao daoKM;
+    private KhuyenMaiDAO daoKM;
     private JLabel lbNgayKetThuc, lbThoiDiemBatDau, lblNewLabel;
     private JComboBox cbTacVuTrangThai, cbPhanTram, cbThoiDiemBatDau, cbThoiDiemKetThuc;
 
@@ -48,7 +43,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener {
         });
     }
 
-    public GD_QuanLyKhuyenMai() throws RemoteException {
+    public GD_QuanLyKhuyenMai() {
         setSize(1000, 700);
         daoKM = new KhuyenMaiDAO();
         setLayout(new BorderLayout(0, 0));
@@ -417,8 +412,8 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener {
             double gioiHan = Double.parseDouble(txtGioiHan.getText());
             int HourBatDau = Integer.parseInt(cbThoiDiemBatDau.getSelectedItem().toString());
             int HourKetThuc = Integer.parseInt(cbThoiDiemKetThuc.getSelectedItem().toString());
-            Time thoiDiemBatDau = new Time(HourBatDau, 0, 0);
-            Time thoiDiemKetThuc = new Time(HourKetThuc, 0, 0);
+            Time thoiDiemBatDau = new java.sql.Time(HourBatDau, 0, 0);
+            Time thoiDiemKetThuc = new java.sql.Time(HourKetThuc, 0, 0);
             return new KhuyenMai(maKhuyenMai, tenKhuyenMai, phanTram, gioiHan, sqlNgayBatDau, sqlNgayKetThuc,
                     thoiDiemBatDau, thoiDiemKetThuc);
         } catch (Exception e) {
@@ -427,7 +422,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener {
         }
     }
 
-    public void loadData() throws RemoteException {
+    public void loadData() {
         list = daoKM.getAllKhuyenMai();
         int i = 1;
         modelTable.setRowCount(0);
@@ -439,7 +434,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener {
         }
     }
 
-    public void chucNangThem() throws RemoteException {
+    public void chucNangThem() {
         daoKM.createKhuyenMai(revertSPFormKhuyenMai());
         int i = list.size();
         loadData();
@@ -471,7 +466,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener {
         txtTimKiemNgayKetThuc.setDate(null);
     }
 
-    public void chucNangCapNhat() throws RemoteException {
+    public void chucNangCapNhat() {
         KhuyenMai km = revertSPFormKhuyenMai();
         daoKM.updateKhuyenMai(km, km.getMaKhuyenMai());
         loadData();

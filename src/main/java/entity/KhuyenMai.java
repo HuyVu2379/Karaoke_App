@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,7 +17,6 @@ import java.util.Set;
 public class KhuyenMai {
     @Id
     private String maKhuyenMai;
-    @Column(unique = true, nullable = false)
     private String tenKhuyenMai;
     private double phanTram;
     private double gioiHan;
@@ -26,7 +26,7 @@ public class KhuyenMai {
     private Time thoiDiemKetThuc;
 
     @OneToMany(mappedBy = "khuyenMai", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<HoaDon> hoaDon;
+    private List<HoaDon> hoaDon;
 
     public KhuyenMai() {
     }

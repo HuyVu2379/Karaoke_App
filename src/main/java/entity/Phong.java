@@ -3,13 +3,16 @@ package entity;
 import enums.TrangThaiPhong;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "Phong")
-public class Phong {
+public class Phong implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     private String maPhong;
     private String tenPhong;
@@ -21,7 +24,7 @@ public class Phong {
     private TrangThaiPhong trangThai;
 
     @OneToMany(mappedBy = "phong", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<PhieuDatPhong> phieuDatPhong;
+    private List<PhieuDatPhong> phieuDatPhong;
 
     public Phong() {
     }
@@ -84,11 +87,11 @@ public class Phong {
     }
 
 
-    public Set<PhieuDatPhong> getPhieuDatPhong() {
+    public List<PhieuDatPhong> getPhieuDatPhong() {
         return phieuDatPhong;
     }
 
-    public void setPhieuDatPhong(Set<PhieuDatPhong> phieuDatPhong) {
+    public void setPhieuDatPhong(List<PhieuDatPhong> phieuDatPhong) {
         this.phieuDatPhong = phieuDatPhong;
     }
 }

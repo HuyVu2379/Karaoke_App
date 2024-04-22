@@ -1,4 +1,4 @@
-package dao.Impl;
+package dao;
 
 import dao.LichSuGiaDichVuDao;
 import entity.LichSuGiaDichVu;

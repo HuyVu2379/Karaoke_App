@@ -1,4 +1,4 @@
-package implDao;
+package dao;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -18,5 +18,5 @@ public interface DichVuDAO extends Remote  {
 	public List<DichVu> executeGetDichVuPage(int page, int size) throws RemoteException;
 	public DichVu getDichVuTheoMa(String maDv) throws RemoteException;
 	public List<DichVu> getDichVuByTrangThai(TrangThaiDichVu trangThai) throws RemoteException;
-	
+
 }

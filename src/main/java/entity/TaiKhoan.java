@@ -3,16 +3,18 @@ package entity;
 import enums.TrangThaiTaiKhoan;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 
 @Entity
 @Table(name = "TaiKhoan")
-public class TaiKhoan {
+public class TaiKhoan implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     private String maTaiKhoan;
     @Column(unique = true, nullable = false)
     private String tenTaiKhoan;
     private String matKhau;
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TrangThaiTaiKhoan trangThai;
 

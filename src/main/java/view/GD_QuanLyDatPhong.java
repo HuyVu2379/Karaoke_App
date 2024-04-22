@@ -1,29 +1,21 @@
 package view;
 
-import dao.Impl.HoaDonDAO;
-import dao.Impl.LoaiPhongDAO;
-import dao.Impl.PhongDAO;
-import entity.HoaDon;
-import entity.LoaiPhong;
-import entity.NhanVien;
-import entity.Phong;
-import enums.TrangThaiLoaiPhong;
-import enums.TrangThaiPhong;
-import utils.PhongPanelClickListener;
-import utils.ResizeImageUtil;
-import utils.RoomPanelUtil;
+import dao.HoaDonDAO;
+import dao.Impl.PhongImpl;
+import dao.LoaiPhongDAO;
+import dao.PhongDAO;
+import entity.*;
+import enums.*;
+import utils.*;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.border.TitledBorder;
 
 public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener, ActionListener {
 
@@ -42,10 +34,9 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
     private final PhongDAO phongDAO;
     private NhanVien nhanVien;
     private JTextField txtCustomerName;
-
     public GD_QuanLyDatPhong(NhanVien currentNhanVien) {
         nhanVien = currentNhanVien;
-        phongDAO = new PhongDAO();
+        phongDAO = new PhongImpl();
         loaiPhongDAO = new LoaiPhongDAO();
         hoaDonDAO = new HoaDonDAO();
         phongSelected = new ArrayList<>();
@@ -119,7 +110,7 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
     }
 
     private void getAllRoom() {
-        listPhong = phongDAO.getPhongLoaiPhongLichSuaGiaByConditionTime();
+        listPhong = phongDAO.getRoomLoaiPhongLichSuaGiaByConditionTime();
         loadRooms(listPhong);
     }
 
@@ -434,8 +425,8 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
     }
 
     private void handleFindAction() {
-        listPhong = phongDAO.getPhongByCondition(
-                cbStatus.getSelectedIndex() - 1,
+        listPhong = phongDAO.getRoomByCondition(
+                cbStatus.toString(),
                 ((LoaiPhong) cbType.getSelectedItem()).getMaLoaiPhong(),
                 txtName.getText()
         );

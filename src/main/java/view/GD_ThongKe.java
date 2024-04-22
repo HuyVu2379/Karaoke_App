@@ -1,24 +1,12 @@
 package view;
 
-import com.toedter.calendar.JDateChooser;
-import connectDB.ConnectDB;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
-
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.time.format.TextStyle;
@@ -26,6 +14,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
+import java.util.logging.SimpleFormatter;
+
+import javax.swing.*;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+import com.toedter.calendar.JDateChooser;
+
+import connectDB.ConnectDB;
+import entity.NhanVien;
 
 public class GD_ThongKe extends JPanel implements ActionListener {
     private JPanel pnNorth, pnCenter, pnSouth, pnInfo, pnChart;
