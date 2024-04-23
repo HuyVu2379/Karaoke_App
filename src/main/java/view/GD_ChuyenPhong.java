@@ -311,7 +311,7 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
         loadRooms(rooms);
     }
 
-    private void loadRooms(List<Phong> newRooms) {
+    private void loadRooms(List<Phong> newRooms) throws RemoteException {
         pnRoomScrollPane.removeAll();
         List<JPanel> roomPanels = RoomPanelUtil.createPhongPanels(newRooms, this);
         roomPanels.forEach(pnRoomScrollPane::add);
@@ -394,8 +394,16 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnFind)) {
-            rooms = validRoom(phongDao.getRoomByNameAndType(txtRoomName.getText(), (LoaiPhong) cbTypeRoom.getSelectedItem()));
-            loadRooms(rooms);
+            try {
+                rooms = validRoom(phongDao.getRoomByNameAndType(txtRoomName.getText(), (LoaiPhong) cbTypeRoom.getSelectedItem()));
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+            try {
+                loadRooms(rooms);
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (o.equals(btnApply)) {
             if(!(txtFollowRoomName.getText().length() > 0)){
                 JOptionPane.showMessageDialog(this, "Chưa chọn phòng mới", "Thông báo",
@@ -403,10 +411,14 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
                 return;
             }
             PhieuDatPhong phieuDatPhong = new PhieuDatPhong(null, Time.valueOf(LocalTime.now()), null, hoaDon, selectedPhong);
-            if (phieuDatPhongDAO.changeRoom(phieuDatPhong)) {
-                JOptionPane.showMessageDialog(this, "Chuyển phòng thành công");
-            } else {
-                JOptionPane.showMessageDialog(this, "Chuyển phòng thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            try {
+                if (phieuDatPhongDAO.changeRoom(phieuDatPhong)) {
+                    JOptionPane.showMessageDialog(this, "Chuyển phòng thành công");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Chuyển phòng thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
             }
 
             setVisible(false);

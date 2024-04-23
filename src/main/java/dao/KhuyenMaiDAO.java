@@ -15,6 +15,7 @@ public interface KhuyenMaiDAO extends Remote{
     public boolean updateKhuyenMai(KhuyenMai km, String maKhuyenMai) throws RemoteException;
     public List<KhuyenMai> TimKiemTheoMa(String ma) throws RemoteException;
     public List<KhuyenMai> TimKiemTheoTheoThoiGian(Date NgayBatDau, Date NgayKetThuc) throws RemoteException;
-
+    public KhuyenMai getKhuyenMaiByTen(String khuyenMaiName) throws RemoteException;
     List<KhuyenMai> pushFileExcel(String path) throws IOException, CsvValidationException, RemoteException;
+
 }

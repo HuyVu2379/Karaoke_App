@@ -1,5 +1,7 @@
 package view;
 
+import dao.Impl.KhachHangDaoImpl;
+import dao.Impl.LoaiPhongDaoImpl;
 import dao.Impl.PhieuDatPhongImpl;
 import dao.Impl.PhongImpl;
 import dao.KhachHangDAO;
@@ -16,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.List;
 
 public class GD_NhanPhong extends JPanel implements ActionListener {
@@ -36,10 +39,10 @@ public class GD_NhanPhong extends JPanel implements ActionListener {
     private PhieuDatPhongDAO phieuDatPhongDAO;
     private List<HoaDon> list;
 
-    public GD_NhanPhong() {
-        khachHangDAO = new KhachHangDAO();
+    public GD_NhanPhong() throws RemoteException {
+        khachHangDAO = new KhachHangDaoImpl();
         phongDAO = new PhongImpl();
-        loaiPhongDAO = new LoaiPhongDAO();
+        loaiPhongDAO = new LoaiPhongDaoImpl();
         phieuDatPhongDAO = new PhieuDatPhongImpl();
         initGUI();
     }
@@ -185,7 +188,7 @@ public class GD_NhanPhong extends JPanel implements ActionListener {
         btnOut.addActionListener(this);
     }
 
-    private void loadData() {
+    private void loadData() throws RemoteException {
         list = phieuDatPhongDAO.getHoaDonBySDTAndTime(txtNumber.getText());
         int i = 0;
         modelTable.setRowCount(0);
@@ -201,13 +204,21 @@ public class GD_NhanPhong extends JPanel implements ActionListener {
         Object o = e.getSource();
         if (o.equals(btnSearch)) {
             if (!txtNumber.getText().isEmpty()) {
-                khachHang = khachHangDAO.getCustomerByPhoneNumber(txtNumber.getText());
+                try {
+                    khachHang = khachHangDAO.getCustomerByPhoneNumber(txtNumber.getText());
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
                 if (khachHang == null) {
                     JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng", "Thông báo", JOptionPane.WARNING_MESSAGE);
                     return;
                 } else {
                     txtCustomer.setText(khachHang.getTenKhachHang());
-                    loadData();
+                    try {
+                        loadData();
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         }
@@ -227,14 +238,22 @@ public class GD_NhanPhong extends JPanel implements ActionListener {
 
                 HoaDon updateHoaDon = updateHoaDonContainer[0];
 
-                invoice = phongDAO.updateRoomStatus(updateHoaDon.getMaHoaDon(), maPhong);
+                try {
+                    invoice = phongDAO.updateRoomStatus(updateHoaDon.getMaHoaDon(), maPhong);
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
                 if (invoice) {
                     JOptionPane.showMessageDialog(this, "Nhận phòng thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this, "Nhận phòng thất bại", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 }
 
-                loadData();
+                try {
+                    loadData();
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
             }else {
                 JOptionPane.showMessageDialog(this, "Hãy chọn một phòng để nhận", "Thông báo", JOptionPane.ERROR_MESSAGE);
             }
@@ -243,10 +262,18 @@ public class GD_NhanPhong extends JPanel implements ActionListener {
             int reply = JOptionPane.showConfirmDialog(this, "Bạn có muốn nhận toàn bộ phòng", "Thông báo", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
                 list.forEach(invoice -> {
-                    phongDAO.updateRoomStatus(invoice.getMaHoaDon(), invoice.getPhieuDatPhongList().get(0).getPhong().getMaPhong());
+                    try {
+                        phongDAO.updateRoomStatus(invoice.getMaHoaDon(), invoice.getPhieuDatPhongList().get(0).getPhong().getMaPhong());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 });
                 JOptionPane.showMessageDialog(this, "Nhận phòng thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                loadData();
+                try {
+                    loadData();
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }
         if (o.equals(btnOut))

@@ -17,7 +17,7 @@ public class ChiTietDatDichVuDAOImpl implements ChiTietDatDichVuDAO {
 	EntityTransaction tx;
 
 	public ChiTietDatDichVuDAOImpl() {
-		em = Persistence.createEntityManagerFactory("ssql").createEntityManager();
+		em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
 	}
 	@Override
 	public List<ChiTietDatDichVu> getChiTietDatDichVuByPhieuDatPhong(String maPhieuDatPhong) {

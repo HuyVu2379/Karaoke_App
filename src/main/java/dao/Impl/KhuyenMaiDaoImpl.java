@@ -92,6 +92,11 @@ public class KhuyenMaiDaoImpl extends UnicastRemoteObject implements KhuyenMaiDA
     }
 
     @Override
+    public KhuyenMai getKhuyenMaiByTen(String khuyenMaiName) throws RemoteException {
+        return null;
+    }
+
+    @Override
     public List<KhuyenMai> pushFileExcel(String path) throws IOException, CsvValidationException, RemoteException {
         List<KhuyenMai> list = new ArrayList<>();
         try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(path), "UTF-8"))) {

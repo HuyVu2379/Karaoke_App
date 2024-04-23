@@ -1,5 +1,6 @@
 package view;
 
+import dao.Impl.KhuyenMaiDaoImpl;
 import dao.Impl.PhieuDatPhongImpl;
 import dao.KhuyenMaiDAO;
 import dao.PhieuDatPhongDAO;
@@ -18,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.rmi.RemoteException;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -54,10 +56,10 @@ public class GD_ThanhToan extends JFrame implements ActionListener {
             }
         });
     }
-    public GD_ThanhToan(List<HoaDon> hoaDon, NhanVien currentNhanVien) {
+    public GD_ThanhToan(List<HoaDon> hoaDon, NhanVien currentNhanVien) throws RemoteException {
         hoaDonList = hoaDon;
         hoaDonList.forEach(currentHoaDon -> currentHoaDon.getPhieuDatPhongList().get(currentHoaDon.getPhieuDatPhongList().size() - 1).setThoiGianKetThuc(new Time(System.currentTimeMillis())));
-        khuyenMaiDAO = new KhuyenMaiDAO();
+        khuyenMaiDAO = new KhuyenMaiDaoImpl();
         phieuDatPhongDao = new PhieuDatPhongImpl();
         nhanVien = currentNhanVien;
         khachHang = hoaDon.get(0).getKhachHang();
@@ -408,8 +410,12 @@ public class GD_ThanhToan extends JFrame implements ActionListener {
 
                 hoaDon.getPhieuDatPhongList().get(hoaDon.getPhieuDatPhongList().size() - 1).setThoiGianKetThuc(new Time(System.currentTimeMillis())); // Set the end time
 
-                if (!phieuDatPhongDao.updatePaymentDetails(hoaDon)) {
-                    updatePaymentDetailsSuccess.set(false);
+                try {
+                    if (!phieuDatPhongDao.updatePaymentDetails(hoaDon)) {
+                        updatePaymentDetailsSuccess.set(false);
+                    }
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
                 }
             });
             if (updatePaymentDetailsSuccess.get()) {
@@ -444,8 +450,12 @@ public class GD_ThanhToan extends JFrame implements ActionListener {
         } else if (source == btnAdd) {
             String khuyenMaiName = txtCouponID.getText();
 
-            KhuyenMai khuyenMai = khuyenMaiDAO.getKhuyenMaiByTen(khuyenMaiName);
-
+            KhuyenMai khuyenMai = null;
+            try {
+                khuyenMai = khuyenMaiDAO.getKhuyenMaiByTen(khuyenMaiName);
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
             if (khuyenMai != null) {
                 double totalPrice = calculateTotalPrice();
                 double discountAmount = calculateDiscountAmount(khuyenMai, totalPrice);
@@ -457,7 +467,8 @@ public class GD_ThanhToan extends JFrame implements ActionListener {
 
                 double discountedTotalPrice = calculateDiscountedTotalPrice(totalPrice, discountAmount);
                 lblTotalAfterDiscount.setText(FormatCurrencyUtil.formatCurrency(discountedTotalPrice));
-                hoaDonList.forEach(hoaDon -> hoaDon.setKhuyenMai(khuyenMai));
+                KhuyenMai finalKhuyenMai = khuyenMai;
+                hoaDonList.forEach(hoaDon -> hoaDon.setKhuyenMai(finalKhuyenMai));
             } else {
                 JOptionPane.showMessageDialog(this,
                         "Không tìm thấy khuyến",

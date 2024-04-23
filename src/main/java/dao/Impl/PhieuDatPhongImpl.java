@@ -18,20 +18,23 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
-public class PhieuDatPhongImpl implements PhieuDatPhongDAO {
+public class PhieuDatPhongImpl extends UnicastRemoteObject implements PhieuDatPhongDAO {
+    private static final long serialVersionUID = 1L;
     private EntityManager em;
     private EntityTransaction tx;
 
-    public PhieuDatPhongImpl() {
+    public PhieuDatPhongImpl() throws RemoteException {
         em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
     }
 
     @Override
-    public boolean bookKaraokeRoom(String maKhachHang, String maNhanVien, String maPhong, Time thoiGianBatDau, Date ngayThanhToan) {
+    public boolean bookKaraokeRoom(String maKhachHang, String maNhanVien, String maPhong, Time thoiGianBatDau, Date ngayThanhToan)throws RemoteException {
         tx = em.getTransaction();
         try {
             tx.begin();
@@ -51,7 +54,7 @@ public class PhieuDatPhongImpl implements PhieuDatPhongDAO {
     }
 
     @Override
-    public List<PhieuDatPhong> getPhieuDatPhongByMaHoaDon(String maHoaDon) {
+    public List<PhieuDatPhong> getPhieuDatPhongByMaHoaDon(String maHoaDon) throws RemoteException{
         String query = "{call GetPhieuDatPhongByMaHoaDon(?)}";
         return em.createNativeQuery(query, PhieuDatPhong.class)
                 .setParameter(1, maHoaDon)
@@ -59,7 +62,7 @@ public class PhieuDatPhongImpl implements PhieuDatPhongDAO {
     }
 
     @Override
-    public boolean updatePaymentDetails(HoaDon hoaDon) {
+    public boolean updatePaymentDetails(HoaDon hoaDon) throws RemoteException{
         tx = em.getTransaction();
         String query = "{CALL UpdatePaymentDetails(?, ?, ?, ?, ?, ?)}";
         try {
@@ -81,7 +84,7 @@ public class PhieuDatPhongImpl implements PhieuDatPhongDAO {
     }
 
     @Override
-    public boolean bookRoomBefore(String maKhachHang, String maNhanVien, String maPhong, Time thoiGianBatDau, Date ngayThanhToan) {
+    public boolean bookRoomBefore(String maKhachHang, String maNhanVien, String maPhong, Time thoiGianBatDau, Date ngayThanhToan) throws RemoteException{
         String query = "{CALL BookRoomBefore(?, ?, ?, ?, ?)}";
         tx = em.getTransaction();
         try {
@@ -102,7 +105,7 @@ public class PhieuDatPhongImpl implements PhieuDatPhongDAO {
     }
 
     @Override
-    public boolean changeRoom(PhieuDatPhong phieuDatPhong) {
+    public boolean changeRoom(PhieuDatPhong phieuDatPhong) throws RemoteException{
         String query = "{CALL ChangeKarokeRoom(?, ?)}";
         tx = em.getTransaction();
         try {
@@ -120,13 +123,13 @@ public class PhieuDatPhongImpl implements PhieuDatPhongDAO {
     }
 
     @Override
-    public List<String[]> getDanhSachPhieu() {
+    public List<String[]> getDanhSachPhieu() throws RemoteException{
         String sql = "SELECT * FROM DanhSachPhieu_View";
         return em.createNativeQuery(sql).getResultList();
     }
 
     @Override
-    public void xoaPhieuDatPhongCho(String maHoaDon) {
+    public void xoaPhieuDatPhongCho(String maHoaDon) throws RemoteException{
         String query = "{CALL XoaPhieuDatPhongCho(?)}";
         tx = em.getTransaction();
         try {
@@ -141,7 +144,7 @@ public class PhieuDatPhongImpl implements PhieuDatPhongDAO {
     }
 
     @Override
-    public List<String[]> timKiemPhieuDatPhong(String sdt) {
+    public List<String[]> timKiemPhieuDatPhong(String sdt) throws RemoteException{
         String query = "SELECT * FROM DanhSachPhieu_View WHERE sdt LIKE ?";
         return em.createNativeQuery(query)
                 .setParameter(1, sdt)
@@ -149,7 +152,7 @@ public class PhieuDatPhongImpl implements PhieuDatPhongDAO {
     }
 
     @Override
-    public List<HoaDon> getHoaDonBySDTAndTime(String soDienThoaiKhachHang) {
+    public List<HoaDon> getHoaDonBySDTAndTime(String soDienThoaiKhachHang) throws RemoteException{
         String query = "{CALL GetHoaDonBySDTAndTime(?)}";
         return em.createNativeQuery(query, HoaDon.class)
                 .setParameter(1, soDienThoaiKhachHang)
