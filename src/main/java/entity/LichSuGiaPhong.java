@@ -2,6 +2,7 @@ package entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +10,8 @@ import java.sql.Time;
 
 @Entity
 @Table(name = "LichSuGiaPhong")
-public class LichSuGiaPhong {
+public class LichSuGiaPhong implements Serializable {
+	private static final long serialVersionUID = 1L;
 	@Id
 	private String maLichSuGiaPhong;
 	private Date ngayBatDau;

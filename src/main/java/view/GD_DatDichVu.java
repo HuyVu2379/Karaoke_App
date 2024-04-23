@@ -217,7 +217,7 @@ public class GD_DatDichVu extends JFrame implements DichVuPanelClickListener, Ac
     @Override
     public void onDichVuPanelClicked(DichVu dichVu) throws RemoteException {
         String quantityStr = JOptionPane.showInputDialog(this, "Nhập số lượng dịch vụ muốn đặt:", "Nhập số lượng", JOptionPane.QUESTION_MESSAGE);
-        DichVu dichVu1 = dichVuDAO.getDichVuTheoMa(dichVu.getMaDichVu());
+        DichVu dichVu1 = dichVuDAO.getDichVuByMa(dichVu.getMaDichVu());
         curQuantity = dichVu1.getSoLuong();
         quantity = Integer.parseInt(quantityStr);
         int quantityAtBegin = dichVu1.getSoLuong();
@@ -264,7 +264,7 @@ public class GD_DatDichVu extends JFrame implements DichVuPanelClickListener, Ac
     }
 
     private void updateQuantity() throws RemoteException {
-        curQuantity = dichVuDAO.getDichVuTheoMa(dichVu.getMaDichVu()).getSoLuong();
+        curQuantity = dichVuDAO.getDichVuByMa(dichVu.getMaDichVu()).getSoLuong();
         this.dichVu.setSoLuong(curQuantity - quantity);
         dichVuDAO.updateDichVu(this.dichVu, this.dichVu.getMaDichVu());
         listDichVu = dichVuDAO.getAllDichVu();
@@ -327,9 +327,17 @@ public class GD_DatDichVu extends JFrame implements DichVuPanelClickListener, Ac
                 throw new RuntimeException(ex);
             }
         } else if (source == btnDelete) {
-            handleDeleteTask();
+            try {
+                handleDeleteTask();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source == btnClearAll) {
-            clearAllData();
+            try {
+                clearAllData();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source == btnApply) {
             setVisible(false);
         } else if (source == btnFind) {

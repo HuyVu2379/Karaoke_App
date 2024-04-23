@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "LoaiDichVu")
-public class LoaiDichVu {
+public class LoaiDichVu implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     private String maLoaiDichVu;
     private String tenLoaiDichVu;

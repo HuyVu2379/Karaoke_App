@@ -98,7 +98,7 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         }
     }
 
-    private void addPanelRoom() {
+    private void addPanelRoom() throws RemoteException {
         pnListRoom = new JPanel();
         pnListRoom.setBackground(new Color(255, 255, 255));
         JScrollPane scrollPane = new JScrollPane(pnListRoom);
@@ -112,12 +112,12 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         getAllRoom();
     }
 
-    private void getAllRoom() {
+    private void getAllRoom() throws RemoteException {
         listPhong = phongDAO.getRoomLoaiPhongLichSuaGiaByConditionTime();
         loadRooms(listPhong);
     }
 
-    private void loadRooms(List<Phong> newRooms) {
+    private void loadRooms(List<Phong> newRooms) throws RemoteException {
         pnListRoom.removeAll();
         List<JPanel> roomPanels = RoomPanelUtil.createPhongPanels(newRooms, this);
         roomPanels.forEach(pnListRoom::add);
@@ -316,7 +316,11 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source.equals(btnFind)) {
-            handleFindAction();
+            try {
+                handleFindAction();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
             phongSelected.clear();
             return;
         } else if (source.equals(btnClear)) {
@@ -324,12 +328,24 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
             phongSelected.clear();
             return;
         } else if (source.equals(btnFindCustomer)) {
-            listPhong = phongDAO.getNewHoaDonByTenKhachHang(txtCustomerName.getText());
-            loadRooms(listPhong);
+            try {
+                listPhong = phongDAO.getNewHoaDonByTenKhachHang(txtCustomerName.getText());
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+            try {
+                loadRooms(listPhong);
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
             phongSelected.clear();
             return;
         }else if (source.equals(btnDatPhongCho)) {
-            openDatPhongChoWindow();
+            try {
+                openDatPhongChoWindow();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
             return;
         }
         if (phongSelected.size() == 0) {
@@ -338,7 +354,11 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         }
         Phong phong = phongSelected.get(0);
         if (source.equals(btnDatPhong)) {
-            openDatPhongWindow();
+            try {
+                openDatPhongWindow();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source.equals(btnChuyenPhong)) {
             try {
                 openChuyenPhongWindow(phong);
@@ -352,7 +372,11 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
                 throw new RuntimeException(ex);
             }
         } else if (source.equals(btnThanhToan)) {
-            openThanhToanWindow(phongSelected);
+            try {
+                openThanhToanWindow(phongSelected);
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
         phongSelected.clear();
@@ -368,19 +392,23 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         }
     }
 
-    private void openDatPhongChoWindow() {
+    private void openDatPhongChoWindow() throws RemoteException {
         GD_DatPhongCho gdDatPhongCho = new GD_DatPhongCho(nhanVien);
         gdDatPhongCho.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                getAllRoom();
+                try {
+                    getAllRoom();
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
                 handleClearAction();
             }
         });
         gdDatPhongCho.setVisible(true);
     }
 
-    private void openThanhToanWindow(List<Phong> phongSelected) {
+    private void openThanhToanWindow(List<Phong> phongSelected) throws RemoteException {
         boolean anyRoomTrong = phongSelected.stream()
                 .anyMatch(phong -> phong.getTrangThai() == TrangThaiPhong.PHONG_DANG_SU_DUNG);
         if (anyRoomTrong) {
@@ -397,7 +425,11 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
             gdThanhToan.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    getAllRoom();
+                    try {
+                        getAllRoom();
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     handleClearAction();
                 }
             });
@@ -407,7 +439,7 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         }
     }
 
-    private void openDatPhongWindow() {
+    private void openDatPhongWindow() throws RemoteException {
         boolean anyRoomTrong = phongSelected.stream()
                 .allMatch(phong -> phong.getTrangThai() == TrangThaiPhong.PHONG_TRONG || phong.getTrangThai() == TrangThaiPhong.PHONG_CHO);
         if (anyRoomTrong) {
@@ -416,7 +448,11 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
             gdDatPhong.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    getAllRoom();
+                    try {
+                        getAllRoom();
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     handleClearAction();
                 }
             });
@@ -433,7 +469,11 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
             gdChuyenPhong.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    getAllRoom();
+                    try {
+                        getAllRoom();
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     handleClearAction();
                 }
             });
@@ -441,7 +481,7 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         }
     }
 
-    private void handleFindAction() {
+    private void handleFindAction() throws RemoteException {
         listPhong = phongDAO.getRoomByCondition(
                 cbStatus.toString(),
                 ((LoaiPhong) cbType.getSelectedItem()).getMaLoaiPhong(),

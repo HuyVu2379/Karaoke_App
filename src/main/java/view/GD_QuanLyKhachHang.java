@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -22,6 +23,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import dao.Impl.KhachHangDaoImpl;
 import dao.KhachHangDAO;
 import entity.KhachHang;
 
@@ -63,9 +65,9 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         });
     }
 
-    public GD_QuanLyKhachHang() {
+    public GD_QuanLyKhachHang() throws RemoteException {
         setSize(1000, 700);
-        daoKH = new KhachHangDAO();
+        daoKH = new KhachHangDaoImpl();
         setLayout(new BorderLayout(0, 5));
 
         JPanel TitlePanel = new JPanel();
@@ -266,15 +268,23 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThem)) {
-            chucNangThem();
+            try {
+                chucNangThem();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (o.equals(btnCapNhat)) {
-            chucNangCapNhat();
+            try {
+                chucNangCapNhat();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (o.equals(btnXoaTrangTacVu)) {
             chucNangXoaTrangTacVu();
         } else if (o.equals(btnXoaTrangThongTin)) {
             chucNangXoaTrangThongTin();
         } else if (o.equals(btnTimKiem)) {
-            chucNangTimKiem();
+//            chucNangTimKiem();
         }
     }
 
@@ -288,7 +298,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         txtMaTimKiem.setText("");
     }
 
-    public void loadData() {
+    public void loadData() throws RemoteException {
         list = daoKH.getAllKhachHang();
         modelTable.setRowCount(0);
         int i = 1;
@@ -316,7 +326,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         }
     }
 
-    public void chucNangThem() {
+    public void chucNangThem() throws RemoteException {
         KhachHang khachHang = revertSPFormKhachHang();
         if (khachHang != null) {
             daoKH.createKhachHang(khachHang);
@@ -324,7 +334,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         }
     }
 
-    public void chucNangCapNhat() {
+    public void chucNangCapNhat() throws RemoteException {
         KhachHang kh = revertSPFormKhachHang();
         if (kh != null) {
             daoKH.updateKhachHang(kh, kh.getMaKhachHang());
@@ -332,13 +342,13 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         }
     }
 
-    public void chucNangTimKiem() {
-        list = daoKH.timKiem(txtMaTimKiem.getText(), txtTenTimKiem.getText());
-        modelTable.setRowCount(0);
-        int i = 1;
-        for (KhachHang KH : list) {
-            String[] row = {i++ + "", KH.getMaKhachHang(), KH.getTenKhachHang(), KH.getSdt()};
-            modelTable.addRow(row);
-        }
-    }
+//    public void chucNangTimKiem() {
+//        list = daoKH.timKiem(txtMaTimKiem.getText(), txtTenTimKiem.getText());
+//        modelTable.setRowCount(0);
+//        int i = 1;
+//        for (KhachHang KH : list) {
+//            String[] row = {i++ + "", KH.getMaKhachHang(), KH.getTenKhachHang(), KH.getSdt()};
+//            modelTable.addRow(row);
+//        }
+//    }
 }

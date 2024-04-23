@@ -163,14 +163,23 @@ public class GD_ManHinhChinh extends JFrame implements ActionListener {
         } else if (source == menuItemTroGiup) {
             JOptionPane.showMessageDialog(null, "Trợ Giúp Clicked");
         } else if (source == menuItemDangXuat) {
-            GD_Login gdLogin = new GD_Login();
+            GD_Login gdLogin = null;
+            try {
+                gdLogin = new GD_Login();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
             gdLogin.setVisible(true);
             setVisible(false);
             return;
         } else if (source == menuItemThoat) {
             setVisible(false);
         } else if (source == menuItemPhong) {
-            simplePanel = new GD_QuanLyPhong();
+            try {
+                simplePanel = new GD_QuanLyPhong();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source == menuItemNhanVien) {
             try {
                 simplePanel = new GD_QuanLyNhanVien();
@@ -178,9 +187,17 @@ public class GD_ManHinhChinh extends JFrame implements ActionListener {
                 throw new RuntimeException(ex);
             }
         } else if (source == menuItemHoaDon) {
-            simplePanel = new GD_QuanLyHoaDon();
+            try {
+                simplePanel = new GD_QuanLyHoaDon();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source == menuItemKhachHang) {
-            simplePanel = new GD_QuanLyKhachHang();
+            try {
+                simplePanel = new GD_QuanLyKhachHang();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source == menuItemKhuyenMai) {
             try {
                 simplePanel = new GD_QuanLyKhuyenMai();
@@ -202,9 +219,17 @@ public class GD_ManHinhChinh extends JFrame implements ActionListener {
                 throw new RuntimeException(ex);
             }
         }else if(source == menuItemNhanPhong){
-            simplePanel = new GD_NhanPhong();
+            try {
+                simplePanel = new GD_NhanPhong();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }else if(source == menuItemHuyDatPhong){
-            simplePanel = new GD_HuyDatPhongCho();
+            try {
+                simplePanel = new GD_HuyDatPhongCho();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }
         setContentPane(simplePanel);
         validate();

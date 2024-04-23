@@ -3,6 +3,7 @@ package entity;
 import enums.TrangThaiNhanVien;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -10,7 +11,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "NhanVien")
-public class NhanVien {
+public class NhanVien implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     private String maNhanVien;
     private String ten;

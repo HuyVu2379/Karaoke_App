@@ -1,6 +1,7 @@
 package dao.Impl;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,12 +11,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
-public class KhachHangDaoImpl implements KhachHangDAO {
+public class KhachHangDaoImpl extends UnicastRemoteObject implements KhachHangDAO {
 	private static final long serialVersionUID = 1L;
 	private EntityManager em;
 	EntityTransaction tx;
 
-	public KhachHangDaoImpl() {
+	public KhachHangDaoImpl() throws RemoteException{
 		em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
 	}
 	
@@ -29,14 +30,14 @@ public class KhachHangDaoImpl implements KhachHangDAO {
 	}
 	@Override
 	//lấy  khách hàng theo số phone
-	public KhachHang getKhachHangByPhone(String phone) throws RemoteException {
+	public KhachHang getCustomerByPhoneNumber(String phone) throws RemoteException {
 		String query = "Select kh from KhachHang kh where kh.sdt = :phone";
 		KhachHang kh = (KhachHang) em.createQuery(query).setParameter("phone", phone).getSingleResult();
 		return kh;
 	}
 	@Override
     //tạo khách hàng
-	public boolean createKhachHang(KhachHang kh) {
+	public boolean createKhachHang(KhachHang kh) throws RemoteException{
 		tx = em.getTransaction();
 		try {
 			tx.begin();
@@ -51,7 +52,7 @@ public class KhachHangDaoImpl implements KhachHangDAO {
 	}
 	@Override
 	//cập nhật khách hàng
-	public boolean updateKhachHang(KhachHang kh, String phone) {
+	public boolean updateKhachHang(KhachHang kh, String phone) throws RemoteException {
         tx = em.getTransaction();
         try {
             tx.begin();

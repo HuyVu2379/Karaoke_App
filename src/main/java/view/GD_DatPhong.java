@@ -3,6 +3,7 @@ package view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalTime;
@@ -18,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import dao.Impl.KhachHangDaoImpl;
 import dao.Impl.PhieuDatPhongImpl;
 import dao.KhachHangDAO;
 import dao.PhieuDatPhongDAO;
@@ -46,10 +48,10 @@ public class GD_DatPhong extends JFrame implements ActionListener {
     private JTable table;
 
 
-    public GD_DatPhong(List<Phong> selectedPhong, NhanVien currentNhanVien) {
+    public GD_DatPhong(List<Phong> selectedPhong, NhanVien currentNhanVien) throws RemoteException {
         phong = selectedPhong;
         nhanVien = currentNhanVien;
-        khachHangDAO = new KhachHangDAO();
+        khachHangDAO = new KhachHangDaoImpl();
         phieuDatPhongDAO = new PhieuDatPhongImpl();
         createGUI();
     }
@@ -174,7 +176,11 @@ public class GD_DatPhong extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Số điện thoại phải đủ 10 số", "Thông báo",
                         JOptionPane.WARNING_MESSAGE);
             } else if (txtPhoneNumber.getText().length() > 0) {
-                currentKhachHang = khachHangDAO.getCustomerByPhoneNumber(txtPhoneNumber.getText());
+                try {
+                    currentKhachHang = khachHangDAO.getCustomerByPhoneNumber(txtPhoneNumber.getText());
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
                 if (currentKhachHang == null) {
                     JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng", "Thông báo",
                             JOptionPane.WARNING_MESSAGE);
@@ -204,9 +210,13 @@ public class GD_DatPhong extends JFrame implements ActionListener {
                 String currentTimeString = currentTime.format(formatter);
                 AtomicBoolean bookingResult = new AtomicBoolean(true);
                 phong.forEach(phong -> {
-                    bookingResult.set(phieuDatPhongDAO.bookKaraokeRoom(currentKhachHang.getMaKhachHang(),
-                            nhanVien.getMaNhanVien(), phong.getMaPhong(), Time.valueOf(currentTimeString),
-                            new Date(System.currentTimeMillis())));
+                    try {
+                        bookingResult.set(phieuDatPhongDAO.bookKaraokeRoom(currentKhachHang.getMaKhachHang(),
+                                nhanVien.getMaNhanVien(), phong.getMaPhong(), Time.valueOf(currentTimeString),
+                                new Date(System.currentTimeMillis())));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 });
 
                 if (bookingResult.get()) {
