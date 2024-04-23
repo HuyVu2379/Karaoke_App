@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LichSuGiaDichVuImpl implements dao.LichSuGiaDichVuDAO {
+    private static final long serialVersionUID = 1L;
     private EntityManager em;
 
     public LichSuGiaDichVuImpl() {

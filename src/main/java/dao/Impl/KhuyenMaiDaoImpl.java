@@ -21,6 +21,7 @@ import java.sql.Date;
 import java.util.List;
 
 public class KhuyenMaiDaoImpl extends UnicastRemoteObject implements KhuyenMaiDAO {
+    private static final long serialVersionUID = 1L;
     EntityManager em;
     SimpleDateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy");
 

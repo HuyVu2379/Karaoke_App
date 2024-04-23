@@ -5,18 +5,20 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import entity.DichVu;
+import entity.LoaiDichVu;
 import enums.TrangThaiDichVu;
 
 public interface DichVuDAO extends Remote  {
-	public List<DichVu> getAllDichVu() throws RemoteException;
-	public DichVu getDichVuByMa(String maDv) throws RemoteException;
-	public DichVu getDichVuByLoai(String loaiDv) throws RemoteException;
 	public boolean createDichVu(DichVu dv) throws RemoteException;
 	public boolean updateDichVu(DichVu dv, String maDv) throws RemoteException;
-	public boolean deleteDichVu(String maDv) throws RemoteException;
-	public List<DichVu> searchDichVu(String tenDv) throws RemoteException;
-	public List<DichVu> executeGetDichVuPage(int page, int size) throws RemoteException;
-	public DichVu getDichVuTheoMa(String maDv) throws RemoteException;
 	public List<DichVu> getDichVuByTrangThai(TrangThaiDichVu trangThai) throws RemoteException;
+	public List<DichVu> getDichVuByLoai(String loaiDv) throws RemoteException;
+	public DichVu getDichVuByMa(String maDv) throws RemoteException;
+	public List<DichVu> getDichVuByTen(String tenDV) throws RemoteException;
+	public List<DichVu> getDichVuByGia(double gia) throws RemoteException;
+    public List<DichVu> getDichVuSoLuong(int soLuong) throws RemoteException;
+	public List<DichVu> getAllDichVu() throws RemoteException;
+	public List<LoaiDichVu> getLoaiDichVu() throws RemoteException;
+
 
 }

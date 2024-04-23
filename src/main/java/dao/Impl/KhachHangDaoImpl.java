@@ -11,11 +11,12 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
 public class KhachHangDaoImpl implements KhachHangDAO {
+	private static final long serialVersionUID = 1L;
 	private EntityManager em;
 	EntityTransaction tx;
 
 	public KhachHangDaoImpl() {
-		em = Persistence.createEntityManagerFactory("ssql").createEntityManager();
+		em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
 	}
 	
 	@Override

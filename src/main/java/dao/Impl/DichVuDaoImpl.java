@@ -5,18 +5,29 @@ import java.util.List;
 
 import dao.DichVuDAO;
 import entity.DichVu;
+import entity.LoaiDichVu;
 import enums.TrangThaiDichVu;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
 public class DichVuDaoImpl implements DichVuDAO {
+	private static final long serialVersionUID = 1L;
 	private EntityManager em;
 	EntityTransaction tx;
 
 	public DichVuDaoImpl() {
-		em = Persistence.createEntityManagerFactory("ssql").createEntityManager();
+		em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
 	}
+
+	@Override
+	public List<LoaiDichVu> getLoaiDichVu() throws RemoteException {
+		String query = "Select ldv from LoaiDichVu ldv";
+		List<LoaiDichVu> listLdv = new ArrayList<LoaiDichVu>();
+		listLdv = em.createQuery(query).getResultList();
+		return listLdv;
+	}
+
 	@Override
 	public List<DichVu> getAllDichVu() throws RemoteException {
 		String query = "Select dv from DichVu dv";
@@ -25,8 +36,7 @@ public class DichVuDaoImpl implements DichVuDAO {
 		return listDv;
 	}
 	@Override
-	//Lấy  dịch vụ theo mã
-	public DichVu getDichVuTheoMa(String maDv) throws RemoteException {
+	public DichVu getDichVuByMa(String maDv) throws RemoteException {
 		String query = "Select dv from DichVu dv where dv.maDichVu = :maDv";
 		DichVu dv = (DichVu) em.createQuery(query).setParameter("maDv", maDv).getSingleResult();
 		return dv;
@@ -67,24 +77,6 @@ public class DichVuDaoImpl implements DichVuDAO {
 		}
 		return true;
 	}
-	//  Lấy kích thước trang dịch vụ
-	@Override
-	public List<DichVu> executeGetDichVuPage(int page, int size) throws RemoteException {
-		String query = "Select dv from DichVu dv";
-		List<DichVu> listDv = new ArrayList<DichVu>();
-		listDv = em.createQuery(query).setFirstResult(page).setMaxResults(size).getResultList();
-		return listDv;
-	}
-
-	@Override
-	//Lấy dịch vụ theo tên
-	public List<DichVu> searchDichVu(String tenDv) throws RemoteException {
-		String query = "Select dv from DichVu dv where dv.tenDichVu = :tenDv";
-		List<DichVu> listDv = new ArrayList<DichVu>();
-		listDv = em.createQuery(query).setParameter("tenDv", tenDv).getResultList();
-		return listDv;
-	}
-	
 	@Override
 	// Lấy danh sách vụ theo trạng thái dịch vụ
 	public List<DichVu> getDichVuByTrangThai(TrangThaiDichVu trangThai) throws RemoteException {
@@ -93,19 +85,35 @@ public class DichVuDaoImpl implements DichVuDAO {
 		listDv = em.createQuery(query).setParameter("trangThai", trangThai).getResultList();
 		return listDv;
 	}
+
 	@Override
-	public boolean deleteDichVu(String maDv) throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public DichVu getDichVuByMa(String maDv) throws RemoteException {
-		// TODO Auto-generated method stub
+	public List<DichVu> getDichVuByLoai(String loaiDv) throws RemoteException {
 		return null;
 	}
+
 	@Override
-	public DichVu getDichVuByLoai(String loaiDv) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<DichVu> getDichVuByTen(String tenDichVu) throws RemoteException {
+		List<DichVu> listDv = new ArrayList<DichVu>();
+		String query = "Select dv from DichVu dv where dv.tenDichVu = :tenDichVu";
+		em.createQuery(query).setParameter("tenDichVu", tenDichVu).getResultList();
+		return listDv;
 	}
+
+	@Override
+	public List<DichVu> getDichVuByGia(double gia) throws RemoteException {
+		String storedProcedure = "{call  GetDichVuByGia(?)}";
+		return em.createNativeQuery(storedProcedure, DichVu.class)
+				.setParameter(1, gia)
+				.getResultList();
+	}
+
+	@Override
+	public List<DichVu> getDichVuSoLuong(int soLuong) throws RemoteException {
+		String query = "Select dv from DichVu dv where dv.soLuong = :soLuong";
+		List<DichVu> listDv = new ArrayList<DichVu>();
+		listDv = em.createQuery(query).setParameter("soLuong", soLuong).getResultList();
+		return listDv;
+	}
+
+
 }

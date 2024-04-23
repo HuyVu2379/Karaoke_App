@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LoaiPhongDaoImpl implements dao.LoaiPhongDAO {
+    private static final long serialVersionUID = 1L;
     EntityManager em;
 
     public LoaiPhongDaoImpl() throws RemoteException {
