@@ -1,11 +1,19 @@
 package dao.Impl;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import dao.KhachHangDAO;
 import entity.KhachHang;
+import entity.KhuyenMai;
+import entity.NhanVien;
+import enums.TrangThaiNhanVien;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
@@ -26,13 +34,6 @@ public class KhachHangDaoImpl implements KhachHangDAO {
 		List<KhachHang> listKh = new ArrayList<KhachHang>();
 		listKh = em.createQuery(query).getResultList();
 		return listKh;
-	}
-	@Override
-	//lấy  khách hàng theo số phone
-	public KhachHang getKhachHangByPhone(String phone) throws RemoteException {
-		String query = "Select kh from KhachHang kh where kh.sdt = :phone";
-		KhachHang kh = (KhachHang) em.createQuery(query).setParameter("phone", phone).getSingleResult();
-		return kh;
 	}
 	@Override
     //tạo khách hàng
@@ -67,20 +68,48 @@ public class KhachHangDaoImpl implements KhachHangDAO {
             }
            return true;
 	}
+
 	@Override
-	//Tìm kiếm khách hàng theo têm khách hàng
-	public List<KhachHang> searchKhachHang(String tenKh) throws RemoteException {
-		String query = "Select kh from KhachHang kh where kh.tenKhachHang = :tenKh";
-		List<KhachHang> listKh = new ArrayList<KhachHang>();
-		listKh = em.createQuery(query).setParameter("tenKh", tenKh).getResultList();
-		return listKh;
+	public List<KhachHang> getKhachHangByTen(String tenKH) throws RemoteException {
+		String query = "Select kh from KhachHang kh where kh.tenKhachHang like :tenKhachHang";
+		List<KhachHang> listKhachHang = em.createQuery(query).setParameter("tenKhachHang", tenKH).getResultList();
+		return listKhachHang;
+	}
+	@Override
+	public List<KhachHang> pushFileExcel(String path) throws IOException, CsvValidationException {
+		List<KhachHang> list = new ArrayList<>();
+		try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(path),"UTF-8"))) {
+			String[] headers = reader.readNext(); // Đọc hàng đầu tiên để lấy tên cột
+			String[] nextLine;
+			while ((nextLine = reader.readNext()) != null) {
+				KhachHang nv = new KhachHang();
+				for (int i = 0; i < headers.length; i++) {
+					// Gán giá trị cho các thuộc tính của đối tượng từ dữ liệu trong hàng CSV
+					switch (headers[i]) {
+						case "ma":
+							nv.setMaKhachHang(nextLine[i].toString());
+							break;
+						case "ten":
+							nv.setTenKhachHang(nextLine[i].toString());
+							break;
+						case "sdt":
+							nv.setSdt(nextLine[i].toString());
+							break;
+					}
+				}
+				list.add(nv);
+			}
+		}
+		return list;
 	}
 
 	@Override
-	public boolean deleteKhachHang(String phone) throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
+	public List<KhachHang> getKhachHangByMa(String maKhachHang) throws RemoteException {
+		List<KhachHang> list = new ArrayList<KhachHang>();
+		String query = "Select kh from KhachHang kh where kh.maKhachHang  =:maKhachHang";
+		KhachHang khachHang = (KhachHang) em.createQuery(query).setParameter("maKhachHang", maKhachHang);
+		list.add(khachHang);
+		return list;
 	}
-	
-	
+
 }

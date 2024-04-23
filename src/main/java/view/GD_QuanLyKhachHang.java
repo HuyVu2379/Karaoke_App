@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -22,13 +25,17 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.opencsv.exceptions.CsvValidationException;
+import dao.Impl.KhachHangDaoImpl;
 import dao.KhachHangDAO;
 import entity.KhachHang;
+import entity.KhuyenMai;
 
 import java.awt.FlowLayout;
 
 public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
 
+    private final JButton btnThemNhieu;
     private JTextField txtkMaKhachHang;
     private JTextField txtTenKH;
     private JTextField txtSDT;
@@ -63,9 +70,9 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         });
     }
 
-    public GD_QuanLyKhachHang() {
+    public GD_QuanLyKhachHang() throws RemoteException {
         setSize(1000, 700);
-        daoKH = new KhachHangDAO();
+        daoKH = new KhachHangDaoImpl();
         setLayout(new BorderLayout(0, 5));
 
         JPanel TitlePanel = new JPanel();
@@ -140,6 +147,14 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         Box BoxThongTin3 = Box.createHorizontalBox();
         BoxThongTin3.setAlignmentX(Component.RIGHT_ALIGNMENT);
         BoxVerticalThongTin.add(BoxThongTin3);
+        
+        btnThemNhieu = new JButton("Thêm CSV File");
+        btnThemNhieu.setBackground(new Color(107, 208, 107));
+        btnThemNhieu.setFont(new Font("Tahoma", Font.BOLD, 14));
+        BoxThongTin3.add(btnThemNhieu);
+        
+        Component horizontalStrut_2 = Box.createHorizontalStrut(20);
+        BoxThongTin3.add(horizontalStrut_2);
 
         btnThem = new JButton("Thêm");
         btnThem.setBackground(new Color(107, 208, 107));
@@ -252,6 +267,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         btnTimKiem.addActionListener(this);
         btnXoaTrangTacVu.addActionListener(this);
         btnXoaTrangThongTin.addActionListener(this);
+        btnThemNhieu.addActionListener(this);
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -266,15 +282,38 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThem)) {
-            chucNangThem();
+            try {
+                chucNangThem();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (o.equals(btnCapNhat)) {
-            chucNangCapNhat();
+            try {
+                chucNangCapNhat();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (o.equals(btnXoaTrangTacVu)) {
             chucNangXoaTrangTacVu();
         } else if (o.equals(btnXoaTrangThongTin)) {
             chucNangXoaTrangThongTin();
         } else if (o.equals(btnTimKiem)) {
-            chucNangTimKiem();
+            try {
+                chucNangTimKiem();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        } else if (o.equals(btnThemNhieu)) {
+            String link = ChooseFile();
+            try {
+                list = daoKH.pushFileExcel(link);
+                addToDBFromCsv(list);
+                loadData();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (CsvValidationException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
@@ -288,7 +327,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         txtMaTimKiem.setText("");
     }
 
-    public void loadData() {
+    public void loadData() throws RemoteException {
         list = daoKH.getAllKhachHang();
         modelTable.setRowCount(0);
         int i = 1;
@@ -316,7 +355,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         }
     }
 
-    public void chucNangThem() {
+    public void chucNangThem() throws RemoteException {
         KhachHang khachHang = revertSPFormKhachHang();
         if (khachHang != null) {
             daoKH.createKhachHang(khachHang);
@@ -324,7 +363,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         }
     }
 
-    public void chucNangCapNhat() {
+    public void chucNangCapNhat() throws RemoteException {
         KhachHang kh = revertSPFormKhachHang();
         if (kh != null) {
             daoKH.updateKhachHang(kh, kh.getMaKhachHang());
@@ -332,13 +371,38 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener {
         }
     }
 
-    public void chucNangTimKiem() {
-        list = daoKH.timKiem(txtMaTimKiem.getText(), txtTenTimKiem.getText());
+    public void chucNangTimKiem() throws RemoteException {
+        if(txtMaTimKiem.equals("")){
+            list = daoKH.getKhachHangByTen(txtTenTimKiem.getText());
+        }
+        else{
+            list = daoKH.getKhachHangByTen(txtMaTimKiem.getText());
+        }
         modelTable.setRowCount(0);
         int i = 1;
         for (KhachHang KH : list) {
             String[] row = {i++ + "", KH.getMaKhachHang(), KH.getTenKhachHang(), KH.getSdt()};
             modelTable.addRow(row);
         }
+    }
+
+
+    public void addToDBFromCsv(List<KhachHang> listKm){
+        for (KhachHang km : listKm){
+            try {
+                daoKH.createKhachHang(km);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String ChooseFile() {
+        JFileChooser f = new JFileChooser();
+        f.setDialogTitle("Mở file");
+        f.showOpenDialog(null);
+        File fileAnh = f.getSelectedFile();
+        String strAnh = fileAnh.getAbsolutePath();
+        return strAnh;
     }
 }
