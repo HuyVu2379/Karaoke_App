@@ -1,8 +1,9 @@
-package implDao;
+package dao.Impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.ChiTietDatDichVuDAO;
 import entity.ChiTietDatDichVu;
 import entity.DichVu;
 import entity.PhieuDatPhong;
@@ -10,7 +11,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
-public class ChiTietDatDichVuDAOImpl implements ChiTietDatDichVuDAO{
+public class ChiTietDatDichVuDAOImpl implements ChiTietDatDichVuDAO {
 	private EntityManager em;
 	EntityTransaction tx;
 

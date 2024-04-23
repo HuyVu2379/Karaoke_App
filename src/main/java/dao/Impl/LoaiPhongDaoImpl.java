@@ -1,23 +1,18 @@
 package dao.Impl;
 
-import dao.LoaiPhongDao;
 import entity.LichSuGiaPhong;
 import entity.LoaiPhong;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 
 import java.rmi.RemoteException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoaiPhongDAO implements LoaiPhongDao {
+public class LoaiPhongDaoImpl implements dao.LoaiPhongDAO {
     EntityManager em;
 
-    public LoaiPhongDAO() throws RemoteException {
+    public LoaiPhongDaoImpl() throws RemoteException {
 		em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
     }
 

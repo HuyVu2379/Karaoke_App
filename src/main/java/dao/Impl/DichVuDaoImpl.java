@@ -1,4 +1,4 @@
-package implDao;
+package dao.Impl;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
-public class DichVuDaoImpl implements implDao.DichVuDAO {
+public class DichVuDaoImpl implements DichVuDAO {
 	private EntityManager em;
 	EntityTransaction tx;
 

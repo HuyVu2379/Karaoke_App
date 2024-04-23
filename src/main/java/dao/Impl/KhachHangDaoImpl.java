@@ -1,9 +1,10 @@
-package implDao;
+package dao.Impl;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.KhachHangDAO;
 import entity.KhachHang;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -28,7 +29,7 @@ public class KhachHangDaoImpl implements KhachHangDAO {
 	@Override
 	//lấy  khách hàng theo số phone
 	public KhachHang getKhachHangByPhone(String phone) throws RemoteException {
-		String query = "Select kh from KhachHang kh where kh.soDienThoai = :phone";
+		String query = "Select kh from KhachHang kh where kh.sdt = :phone";
 		KhachHang kh = (KhachHang) em.createQuery(query).setParameter("phone", phone).getSingleResult();
 		return kh;
 	}

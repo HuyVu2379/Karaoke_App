@@ -44,6 +44,9 @@ dependencies {
 
 // https://mvnrepository.com/artifact/com.opencsv/opencsv
   implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1'
+  // https://mvnrepository.com/artifact/com.itextpdf/itextpdf
+  implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.3'
+
 }
 
 test {

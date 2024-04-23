@@ -1,5 +1,6 @@
 package view;
 
+import dao.Impl.LoaiPhongDaoImpl;
 import dao.Impl.PhieuDatPhongImpl;
 import dao.Impl.PhongImpl;
 import dao.LoaiPhongDAO;
@@ -19,6 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -54,10 +56,10 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
         }
     }
 
-    public GD_ChuyenPhong(HoaDon currentHoaDon, Phong selectedPhong) {
+    public GD_ChuyenPhong(HoaDon currentHoaDon, Phong selectedPhong) throws RemoteException {
         phong = selectedPhong;
         hoaDon = currentHoaDon;
-        loaiPhongDao = new LoaiPhongDAO();
+        loaiPhongDao = new LoaiPhongDaoImpl();
         phieuDatPhongDAO = new PhieuDatPhongImpl();
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
@@ -69,7 +71,7 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
         addPanelCenter();
     }
 
-    private void addPanelCenter() {
+    private void addPanelCenter() throws RemoteException {
         pnCenter = new JPanel();
         pnCenter.setBackground(new Color(255, 255, 255));
         getContentPane().add(pnCenter, BorderLayout.CENTER);
@@ -267,7 +269,7 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
         return rooms;
     }
 
-    private void initData() {
+    private void initData() throws RemoteException {
         rooms = validRoom(phongDao.getRoomLoaiPhongLichSuaGiaByConditionTime());
 
         List<LoaiPhong> loaiPhongList = loaiPhongDao.getAllLoaiPhong();
@@ -277,7 +279,7 @@ public class GD_ChuyenPhong extends JDialog implements PhongPanelClickListener, 
         });
     }
 
-    private void addRoomsPanel() {
+    private void addRoomsPanel() throws RemoteException {
         pnRoomScrollPane = new JPanel();
         pnRoomScrollPane.setBackground(new Color(255, 255, 255));
 

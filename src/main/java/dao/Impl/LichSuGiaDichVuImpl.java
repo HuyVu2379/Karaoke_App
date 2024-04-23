@@ -1,21 +1,16 @@
 package dao.Impl;
 
-import dao.LichSuGiaDichVuDao;
 import entity.LichSuGiaDichVu;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LichSuGiaDichVuDAO implements LichSuGiaDichVuDao {
+public class LichSuGiaDichVuImpl implements dao.LichSuGiaDichVuDAO {
     private EntityManager em;
 
-    public LichSuGiaDichVuDAO() {
+    public LichSuGiaDichVuImpl() {
         em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
     }
 

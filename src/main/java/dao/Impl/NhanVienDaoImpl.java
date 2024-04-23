@@ -3,25 +3,23 @@ package dao.Impl;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-import dao.NhanVienDao;
+import dao.NhanVienDAO;
 import entity.NhanVien;
 import enums.TrangThaiNhanVien;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
 import java.io.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NhanVienDAO implements NhanVienDao {
+public class NhanVienDaoImpl implements NhanVienDAO {
     private EntityManager em;
     EntityTransaction tx;
 
-    public NhanVienDAO() {
+    public NhanVienDaoImpl() {
         em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
     }
 

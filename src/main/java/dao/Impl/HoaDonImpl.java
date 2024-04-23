@@ -1,16 +1,17 @@
-package implDao;
+package dao.Impl;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import dao.HoaDonDAO;
 import entity.HoaDon;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
-public class HoaDonImpl implements HoaDonDAO{
+public class HoaDonImpl implements HoaDonDAO {
 	private EntityManager em;
 	EntityTransaction tx;
 

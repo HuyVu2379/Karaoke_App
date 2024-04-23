@@ -2,10 +2,8 @@ package dao.Impl;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-import dao.KhuyenMaiDao;
+import dao.KhuyenMaiDAO;
 import entity.KhuyenMai;
-import entity.NhanVien;
-import enums.TrangThaiNhanVien;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
@@ -22,7 +20,7 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
 
-public class KhuyenMaiDAO extends UnicastRemoteObject implements KhuyenMaiDao {
+public class KhuyenMaiDaoImpl extends UnicastRemoteObject implements KhuyenMaiDAO {
     EntityManager em;
     SimpleDateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -31,7 +29,7 @@ public class KhuyenMaiDAO extends UnicastRemoteObject implements KhuyenMaiDao {
     SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
     Time time = null;
     Date date;
-    public KhuyenMaiDAO() throws RemoteException {
+    public KhuyenMaiDaoImpl() throws RemoteException {
         em = Persistence.createEntityManagerFactory("mssql")
                 .createEntityManager();
     }

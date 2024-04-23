@@ -2,16 +2,12 @@ package dao;
 
 import com.opencsv.exceptions.CsvValidationException;
 import entity.NhanVien;
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.List;
 
-public interface NhanVienDao {
+public interface NhanVienDAO {
     public List<NhanVien> getAllNhanVien() throws RemoteException;
     public boolean createNhanVien(NhanVien nv) throws RemoteException;
     public boolean updateNhanVien(NhanVien nv, String maNV) throws RemoteException;
