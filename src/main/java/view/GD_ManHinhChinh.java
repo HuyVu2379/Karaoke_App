@@ -7,6 +7,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -171,19 +172,35 @@ public class GD_ManHinhChinh extends JFrame implements ActionListener {
         } else if (source == menuItemPhong) {
             simplePanel = new GD_QuanLyPhong();
         } else if (source == menuItemNhanVien) {
-            simplePanel = new GD_QuanLyNhanVien();
+            try {
+                simplePanel = new GD_QuanLyNhanVien();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source == menuItemHoaDon) {
             simplePanel = new GD_QuanLyHoaDon();
         } else if (source == menuItemKhachHang) {
             simplePanel = new GD_QuanLyKhachHang();
         } else if (source == menuItemKhuyenMai) {
-            simplePanel = new GD_QuanLyKhuyenMai();
+            try {
+                simplePanel = new GD_QuanLyKhuyenMai();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source == menuItemDichVu) {
-            simplePanel = new GD_QuanLyDichVu();
+            try {
+                simplePanel = new GD_QuanLyDichVu();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source == menuItemTKDoanhThu) {
-            simplePanel = new GD_ThongKe();
+//            simplePanel = new GD_ThongKe();
         } else if (source == menuItemDatPhong) {
-            simplePanel = new GD_QuanLyDatPhong(this.taiKhoanLogin.getNhanVien());
+            try {
+                simplePanel = new GD_QuanLyDatPhong(this.taiKhoanLogin.getNhanVien());
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }else if(source == menuItemNhanPhong){
             simplePanel = new GD_NhanPhong();
         }else if(source == menuItemHuyDatPhong){

@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.rmi.RemoteException;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.DecimalFormat;
@@ -25,6 +26,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import dao.DichVuDAO;
+import dao.Impl.DichVuDaoImpl;
+import dao.Impl.LichSuGiaDichVuImpl;
 import dao.LichSuGiaDichVuDAO;
 import entity.DichVu;
 import entity.LichSuGiaDichVu;
@@ -80,13 +83,13 @@ public class GD_QuanLyDichVu extends JPanel implements ActionListener, MouseList
     private String imageDichVu;
     private String filename;
 
-    public GD_QuanLyDichVu() {
-        dichVuDAO = new DichVuDAO();
-        lichSuGiaGiaoDichDAO = new LichSuGiaDichVuDAO();
+    public GD_QuanLyDichVu() throws RemoteException {
+        dichVuDAO = new DichVuDaoImpl();
+        lichSuGiaGiaoDichDAO = new LichSuGiaDichVuImpl();
         initGUI();
     }
 
-    private void initGUI() {
+    private void initGUI() throws RemoteException {
         setupFrame();
 
         addPanelNorth();
@@ -115,7 +118,7 @@ public class GD_QuanLyDichVu extends JPanel implements ActionListener, MouseList
 
     }
 
-    private void addPanelCenter() {
+    private void addPanelCenter() throws RemoteException {
         pnCenter = new JPanel();
         pnCenter.setBackground(new Color(255, 255, 255));
         add(pnCenter);
@@ -123,7 +126,7 @@ public class GD_QuanLyDichVu extends JPanel implements ActionListener, MouseList
         addForm();
     }
 
-    private void addForm() {
+    private void addForm() throws RemoteException {
         pnCenter.setLayout(new BorderLayout(0, 0));
         pnFirstForm = new JPanel();
         pnFirstForm.setBorder(new TitledBorder(
@@ -358,7 +361,7 @@ public class GD_QuanLyDichVu extends JPanel implements ActionListener, MouseList
         updateComboBoxType();
     }
 
-    private void loadData() {
+    private void loadData() throws RemoteException {
         modelTable.setRowCount(0);
         List<DichVu> list = dichVuDAO.getAllDichVu();
         for (DichVu s : list) {
@@ -374,7 +377,7 @@ public class GD_QuanLyDichVu extends JPanel implements ActionListener, MouseList
         cbType.addItem(TrangThaiDichVu.HIEU_LUC.getName());
     }
 
-    private void updateComboBoxType() {
+    private void updateComboBoxType() throws RemoteException {
         List<LoaiDichVu> list = dichVuDAO.getLoaiDichVu();
         for (LoaiDichVu dichVu : list) {
             cbLoaiDichVu.addItem(dichVu);
@@ -385,37 +388,49 @@ public class GD_QuanLyDichVu extends JPanel implements ActionListener, MouseList
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnAdd)) {
-            addObject();
+            try {
+                addObject();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }
         if (o.equals(btnDelete)) {
             delete();
         }
         if (o.equals(btnUpdate)) {
-            updateObject();
+            try {
+                updateObject();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }
         if (o.equals(btnChoose)) {
             selectImage();
         }
         if (o.equals(btnSearch)) {
-            handleSearch();
+            try {
+                handleSearch();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
     }
 
-    private void handleSearch() {
+    private void handleSearch() throws RemoteException {
         int selectedOption = cbSelectKey.getSelectedIndex();
         invoices = getColumnName(selectedOption);
         loadData();
     }
 
-    private void addObject() {
+    private void addObject() throws RemoteException {
         DichVu dv = reverSPFromTextFile();
 //        LichSuGiaDichVu lichSu = rever();
 //        Object[] row = {dv.getMaDichVu(), dv.getTenDichVu(), 0,
 //                dv.getSoLuong(), dv.getLoaiDichVu().getTenLoaiDichVu(), dv.getTrangThai().getName()};
 //        modelTable.addRow(row);
 //        dichVuDAO.addLichSuGiaGiaoDich(lichSu, dv);
-        boolean in = dichVuDAO.addDichVu(dv);
+        boolean in = dichVuDAO.createDichVu(dv);
         if(in == true){
              JOptionPane.showMessageDialog(this, "Thêm thành công");
              loadData();
@@ -450,7 +465,7 @@ public class GD_QuanLyDichVu extends JPanel implements ActionListener, MouseList
         txtQuantity.setText("");
     }
 
-    private void updateObject() {
+    private void updateObject() throws RemoteException {
         int hangDuocChon = table.getSelectedRow();
         if (hangDuocChon > -1) {
             DichVu dv = reverSPFromTextFile();
@@ -472,16 +487,19 @@ public class GD_QuanLyDichVu extends JPanel implements ActionListener, MouseList
         lbImageStaff.setIcon(imageIcon);
     }
 
-    private List<DichVu> getColumnName(int selectedOption) {
+    private List<DichVu> getColumnName(int selectedOption) throws RemoteException {
         switch (selectedOption) {
             case 0:
-                return dichVuDAO.getDichVuTheoMa(txtKey.getText());
+                List<DichVu> listdv1 = new ArrayList<>();
+                DichVu dv = dichVuDAO.getDichVuByMa(txtKey.getText());
+                listdv1.add(dv);
+                return listdv1;
             case 1:
-                return dichVuDAO.getDSDichVuTheoTen(txtKey.getText());
+                return dichVuDAO.getDichVuByTen(txtKey.getText());
             case 2:
-                // tìm theo giá
+                return dichVuDAO.getDichVuByGia(Double.parseDouble(txtKey.getText()));
             case 3:
-                // Tìm theo số lượng
+                return dichVuDAO.getDichVuSoLuong(Integer.parseInt(txtKey.getText()));
             case 4:
                 // Tìm theo loại dịch vụ
                 searchHorizontalBox.remove(txtKey);
@@ -490,10 +508,8 @@ public class GD_QuanLyDichVu extends JPanel implements ActionListener, MouseList
                 cbTypeTwo.addItem(TrangThaiDichVu.HIEU_LUC.getName());
                 // return dichVuDAO;
             default:
-                // Tìm theo trạng thái
+                return dichVuDAO.getDichVuByTrangThai(TrangThaiDichVu.valueOf(txtKey.getText()));
         }
-
-        return null;
     }
 
 //    private void loadImage(String maDichVu) {
@@ -518,7 +534,7 @@ public class GD_QuanLyDichVu extends JPanel implements ActionListener, MouseList
         }
         txtQuantity.setText(modelTable.getValueAt(rowSelect, 3).toString());
         cbLoaiDichVu.setSelectedItem(modelTable.getValueAt(rowSelect, 4));
-        cbType.setSelectedItem(modelTable.getValueAt(rowSelect, 5));
+        cbType.setSelectedItem(modelTable.getValueAt(rowSelect, 5).toString());
 
 //      loadImage(txtID.getText());
     }

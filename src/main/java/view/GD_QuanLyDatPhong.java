@@ -50,7 +50,7 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         setSize(1000, 700);
     }
 
-    private void initGUI() {
+    private void initGUI() throws RemoteException {
         setupFrame();
 
         addPanelNorth();
