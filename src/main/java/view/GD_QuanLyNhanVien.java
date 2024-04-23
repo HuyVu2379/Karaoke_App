@@ -1,36 +1,21 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Font;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-
-import connectDB.ConnectDB;
+import com.opencsv.exceptions.CsvValidationException;
+import dao.Impl.NhanVienDaoImpl;
 import dao.NhanVienDAO;
 import entity.NhanVien;
 import enums.TrangThaiNhanVien;
 
-import java.awt.GridLayout;
-import java.awt.event.*;
-import java.sql.SQLException;
-import java.util.List;
-
-import java.awt.Component;
-import java.awt.Dimension;
-
+import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.border.EtchedBorder;
-import java.awt.FlowLayout;
-
-import utils.*;
-
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.util.List;
 
 public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
 
@@ -40,17 +25,20 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
     private Box BoxVerticalThongTin, BoxMaAndSDT, BoxTenAndEmail, horizontalBox_6, horizontalBox_7;
     private JTextField txtMaNhanVien, txtSDT, txtTenNhanVien, txtEmail, txtDiaChi, txtTuKhoaTimKiem;
     private JComboBox cbTrangThai;
-    private JButton btnThem, btnCapNhat, btnXoaTrang, btnTimKiem;
+    private JButton btnCapNhat, btnXoaTrang, btnTimKiem;
     private JPanel PaneTVandDanhSach, PaneTacVu_1;
     private Box verticalBox_1, horizontalBox_1;
     private JComboBox cbTuKhoa;
     private JTable table;
     private DefaultTableModel modelTable;
     private JScrollPane scrollPane;
+    private Component horizontalStrut;
+    private JButton btnThemNhieu;
+    private JButton btnThem;
 
-    public GD_QuanLyNhanVien() {
+    public GD_QuanLyNhanVien() throws RemoteException {
         setSize(1000, 700);
-        daoNV = new NhanVienDAO();
+        daoNV = new NhanVienDaoImpl();
         setLayout(new BorderLayout());
 
         JPanel TitlePanel = new JPanel();
@@ -162,29 +150,50 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
         BoxVerticalThongTin.add(Box.createVerticalStrut(20));
 
         horizontalBox_7 = Box.createHorizontalBox();
+        horizontalBox_7.setSize(new Dimension(0, 21));
         BoxVerticalThongTin.add(horizontalBox_7);
 
+        btnThemNhieu = new JButton("Thêm file excel");
+        btnThemNhieu.setBackground(new Color(107, 208, 107));
+        btnThemNhieu.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnThemNhieu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        horizontalBox_7.add(btnThemNhieu);
+
+        horizontalStrut = Box.createHorizontalStrut(20);
+        horizontalBox_7.add(horizontalStrut);
+        
         btnThem = new JButton("Thêm");
-        btnThem.setIcon(new ImageIcon("src\\main\\resources\\image\\icon\\add_icon.png"));
-        btnThem.setBackground(new Color(107, 208, 107));
+        btnThem.setPreferredSize(new Dimension(80, 0));
+        btnThem.setMaximumSize(new Dimension(80, 21));
         btnThem.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnThem.setBackground(new Color(107, 208, 107));
         horizontalBox_7.add(btnThem);
-
-        horizontalBox_7.add(Box.createHorizontalStrut(20));
-
-        btnCapNhat = new JButton("Cập nhật");
-        btnCapNhat.setIcon(new ImageIcon("src\\main\\resources\\image\\icon\\update_icon.png"));
-        btnCapNhat.setBackground(new Color(107, 208, 107));
-        btnCapNhat.setFont(new Font("Tahoma", Font.BOLD, 14));
-        horizontalBox_7.add(btnCapNhat);
-
-        horizontalBox_7.add(Box.createHorizontalStrut(20));
+        
+                Component horizontalStrut_2 = Box.createHorizontalStrut(20);
+                horizontalBox_7.add(horizontalStrut_2);
 
         btnXoaTrang = new JButton("Xóa trắng");
+        btnXoaTrang.setPreferredSize(new Dimension(120, 0));
+        btnXoaTrang.setMaximumSize(new Dimension(150, 21));
         btnXoaTrang.setIcon(new ImageIcon("src\\main\\resources\\image\\icon\\clear_icon.png"));
         btnXoaTrang.setBackground(new Color(107, 208, 107));
         btnXoaTrang.setFont(new Font("Tahoma", Font.BOLD, 14));
         horizontalBox_7.add(btnXoaTrang);
+                
+                        Component horizontalStrut_1 = Box.createHorizontalStrut(20);
+                        horizontalBox_7.add(horizontalStrut_1);
+        
+                btnCapNhat = new JButton("Cập nhật");
+                btnCapNhat.setPreferredSize(new Dimension(120, 0));
+                btnCapNhat.setMaximumSize(new Dimension(100, 21));
+                btnCapNhat.setIcon(new ImageIcon("src\\main\\resources\\image\\icon\\update_icon.png"));
+                btnCapNhat.setBackground(new Color(107, 208, 107));
+                btnCapNhat.setFont(new Font("Tahoma", Font.BOLD, 14));
+                horizontalBox_7.add(btnCapNhat);
+                btnCapNhat.addActionListener(this);
 
         BoxVerticalThongTin.add(Box.createVerticalStrut(20));
 
@@ -233,6 +242,9 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
         horizontalBox_1.add(Box.createHorizontalStrut(20));
 
         btnTimKiem = new JButton("Tìm kiếm");
+        btnTimKiem.setSize(new Dimension(80, 21));
+        btnTimKiem.setPreferredSize(new Dimension(110, 21));
+        btnTimKiem.setMaximumSize(new Dimension(100, 21));
         btnTimKiem.setIcon(new ImageIcon("src\\main\\resources\\image\\icon\\search_icon.png"));
         btnTimKiem.setBackground(new Color(107, 208, 107));
         btnTimKiem.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -253,10 +265,9 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
 
         loadData();
         loadcomboBoxTrangThai();
-        btnThem.addActionListener(this);
         btnXoaTrang.addActionListener(this);
-        btnCapNhat.addActionListener(this);
         btnTimKiem.addActionListener(this);
+        btnThemNhieu.addActionListener(this);
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -282,7 +293,11 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
                     if (cbTuKhoa.getSelectedIndex() == 0) {
                         txtTuKhoaTimKiem.setText("");
                         txtTuKhoaTimKiem.setEnabled(false);
-                        loadData();
+                        try {
+                            loadData();
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     } else if (cbTuKhoa.getSelectedIndex() == 1) {
                         txtTuKhoaTimKiem.setEnabled(true);
                         txtTuKhoaTimKiem.setText("");
@@ -323,15 +338,36 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
         if (o.equals(btnXoaTrang)) {
             xoaTrang();
         } else if (o.equals(btnThem)) {
-            chucNangThem();
+            try {
+                chucNangThem();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (o.equals(btnCapNhat)) {
-            chucNangCapNhat();
+            try {
+                chucNangCapNhat();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (o.equals(btnTimKiem)) {
             chucNangTimKiem();
+        } else if (o.equals(btnThemNhieu)) {
+            try {
+                String path = NutChonAnh();
+                List<NhanVien> list = daoNV.pushFileExcel(path);
+                addToDBFromCsv(list);
+            } catch (IOException | CsvValidationException ex) {
+                throw new RuntimeException(ex);
+            }
+            try {
+                loadData();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
-    public void loadData() {
+    public void loadData() throws RemoteException {
         list = daoNV.getAllNhanVien();
         modelTable.setRowCount(0);
         for (NhanVien nhanVien : list) {
@@ -341,23 +377,23 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
         }
     }
 
-    public void loadDataFind() throws SQLException {
+    public void loadDataFind() throws RemoteException {
         String tuKhoa = txtTuKhoaTimKiem.getText();
         String s = cbTuKhoa.getSelectedItem().toString();
         if (s.equals("Tất cả")) {
             list = daoNV.TimKiemTatCa(tuKhoa);
         } else if (s.equals("Mã nhân viên")) {
-            list = daoNV.TimKiemTheoMaNhanVien(tuKhoa);
+            list = daoNV.getNhanVienTheoMa(tuKhoa);
         } else if (s.equals("Tên nhân viên")) {
-            list = daoNV.TimKiemTheoTenNhanVien(tuKhoa);
+            list = daoNV.getNhanVienTheoTen(tuKhoa);
         } else if (s.equals("Chức vụ")) {
-            list = daoNV.TimKiemTheoChucVu(tuKhoa);
+            list = daoNV.getNhanVienTheoChucVu(tuKhoa);
         } else if (s.equals("Số điện thoại")) {
-            list = daoNV.TimKiemTheoSDT(tuKhoa);
+            list = daoNV.getNhanVienTheoSDT(tuKhoa);
         } else if (s.equals("Email")) {
-            list = daoNV.TimKiemTheoEmail(tuKhoa);
+            list = daoNV.getNhanVienTheoEmail(tuKhoa);
         } else if (s.equals("Địa chỉ")) {
-            list = daoNV.TimKiemTheoDiaChi(tuKhoa);
+            list = daoNV.getNhanVienTheoDiaChi(tuKhoa);
         }
         modelTable.setRowCount(0);
         for (NhanVien nhanVien : list) {
@@ -375,7 +411,7 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
         txtTuKhoaTimKiem.setText("");
     }
 
-    public void chucNangThem() {
+    public void chucNangThem() throws RemoteException {
         NhanVien nhanVien = createNhanVien();
         if (nhanVien != null) {
             String[] s = {nhanVien.getMaNhanVien(), nhanVien.getTen(), nhanVien.getChucVu(), nhanVien.getSdt(),
@@ -385,7 +421,7 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
         }
     }
 
-    public void chucNangCapNhat() {
+    public void chucNangCapNhat() throws RemoteException {
         NhanVien nv = createNhanVien();
         if (nv != null) {
             daoNV.updateNhanVien(nv, nv.getMaNhanVien());
@@ -396,8 +432,8 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
     public void chucNangTimKiem() {
         try {
             loadDataFind();
-        } catch (SQLException e1) {
-            e1.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 
@@ -432,11 +468,21 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener {
         cbTrangThai.addItem(TrangThaiNhanVien.VO_HIEU);
     }
 
-    public void NutChonAnh() {
+    public String NutChonAnh() {
         JFileChooser f = new JFileChooser();
         f.setDialogTitle("Mở file");
         f.showOpenDialog(null);
         File fileAnh = f.getSelectedFile();
         String strAnh = fileAnh.getAbsolutePath();
+        return strAnh;
+    }
+    public void addToDBFromCsv(List<NhanVien> list){
+        for (NhanVien nhanVien : list) {
+            try {
+                daoNV.createNhanVien(nhanVien);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

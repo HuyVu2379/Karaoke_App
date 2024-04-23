@@ -2,6 +2,7 @@ package utils;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.rmi.RemoteException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,6 +10,7 @@ import java.util.List;
 import javax.swing.*;
 
 import dao.HoaDonDAO;
+import dao.Impl.HoaDonImpl;
 import entity.DichVu;
 import entity.HoaDon;
 import entity.Phong;
@@ -20,8 +22,13 @@ public class RoomPanelUtil {
     static int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
 
     public static List<JPanel> createPhongPanels(List<Phong> listPhong, PhongPanelClickListener listener) {
-        HoaDonDAO hoaDonDao = new HoaDonDAO();
-        List<HoaDon> listHoaDon = hoaDonDao.getTodayPhieuDatPhongCho();
+        HoaDonDAO hoaDonDao = new HoaDonImpl();
+        List<HoaDon> listHoaDon = null;
+        try {
+            listHoaDon = hoaDonDao.getAllHoaDon();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
         List<JPanel> panels = new ArrayList<>();
 
         for (Phong phong : listPhong) {

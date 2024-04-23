@@ -1,6 +1,8 @@
 package view;
 
 import dao.HoaDonDAO;
+import dao.Impl.HoaDonImpl;
+import dao.Impl.LoaiPhongDaoImpl;
 import dao.Impl.PhongImpl;
 import dao.LoaiPhongDAO;
 import dao.PhongDAO;
@@ -11,6 +13,7 @@ import utils.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,11 +37,11 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
     private final PhongDAO phongDAO;
     private NhanVien nhanVien;
     private JTextField txtCustomerName;
-    public GD_QuanLyDatPhong(NhanVien currentNhanVien) {
+    public GD_QuanLyDatPhong(NhanVien currentNhanVien) throws RemoteException {
         nhanVien = currentNhanVien;
         phongDAO = new PhongImpl();
-        loaiPhongDAO = new LoaiPhongDAO();
-        hoaDonDAO = new HoaDonDAO();
+        loaiPhongDAO = new LoaiPhongDaoImpl();
+        hoaDonDAO = new HoaDonImpl();
         phongSelected = new ArrayList<>();
         initGUI();
     }
@@ -57,7 +60,7 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         addPanelCenter();
     }
 
-    private void addPanelCenter() {
+    private void addPanelCenter() throws RemoteException {
         pnCenter = new JPanel();
         pnCenter.setBackground(new Color(255, 255, 255));
         add(pnCenter);
@@ -124,7 +127,7 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
 
     }
 
-    private void addForm() {
+    private void addForm() throws RemoteException {
         JPanel pnForm = new JPanel();
         pnForm.setBackground(new Color(255, 255, 255));
         pnCenter.add(pnForm, BorderLayout.NORTH);
@@ -337,9 +340,17 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         if (source.equals(btnDatPhong)) {
             openDatPhongWindow();
         } else if (source.equals(btnChuyenPhong)) {
-            openChuyenPhongWindow(phong);
+            try {
+                openChuyenPhongWindow(phong);
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }  else if (source.equals(btnDichVu)) {
-            openDatDichVuWindow(phong);
+            try {
+                openDatDichVuWindow(phong);
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source.equals(btnThanhToan)) {
             openThanhToanWindow(phongSelected);
         }
@@ -347,7 +358,7 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         phongSelected.clear();
     }
 
-    private void openDatDichVuWindow(Phong phongSelected) {
+    private void openDatDichVuWindow(Phong phongSelected) throws RemoteException {
         if (phongSelected != null && phongSelected.getTrangThai() == TrangThaiPhong.PHONG_DANG_SU_DUNG) {
             HoaDon hoaDon = hoaDonDAO.getHoaDonByMaPhong(phongSelected.getMaPhong());
             GD_DatDichVu gdDatDichVu = new GD_DatDichVu(hoaDon, phongSelected);
@@ -374,7 +385,13 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
                 .anyMatch(phong -> phong.getTrangThai() == TrangThaiPhong.PHONG_DANG_SU_DUNG);
         if (anyRoomTrong) {
             List<HoaDon> hoaDonList = phongSelected.stream()
-                    .map(phong -> hoaDonDAO.getHoaDonByMaPhong(phong.getMaPhong()))
+                    .map(phong -> {
+                        try {
+                            return hoaDonDAO.getHoaDonByMaPhong(phong.getMaPhong());
+                        } catch (RemoteException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
                     .collect(Collectors.toList());
             GD_ThanhToan gdThanhToan = new GD_ThanhToan(hoaDonList, nhanVien);
             gdThanhToan.addWindowListener(new WindowAdapter() {
@@ -409,7 +426,7 @@ public class GD_QuanLyDatPhong extends JPanel implements PhongPanelClickListener
         }
     }
 
-    private void openChuyenPhongWindow(Phong phongSelected) {
+    private void openChuyenPhongWindow(Phong phongSelected) throws RemoteException {
         if (phongSelected != null) {
             HoaDon hoaDon = hoaDonDAO.getHoaDonByMaPhong(phongSelected.getMaPhong());
             GD_ChuyenPhong gdChuyenPhong = new GD_ChuyenPhong(hoaDon, phongSelected);

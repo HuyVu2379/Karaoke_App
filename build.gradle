@@ -1,50 +1,53 @@
 plugins {
-    id 'java'
+  id 'java'
 }
 
-group 'iuh.fit'
+group 'org.example'
 version '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 ext {
-    junitVersion = '5.9.2'
+  junitVersion = '5.9.2'
 }
 
-sourceCompatibility = '21'
-targetCompatibility = '21'
+sourceCompatibility = '11'
+targetCompatibility = '11'
 
 tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+  options.encoding = 'UTF-8'
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
-    implementation 'com.microsoft.sqlserver:mssql-jdbc:11.2.3.jre17'
-    // https://mvnrepository.com/artifact/com.toedter/jcalendar
-    implementation 'com.toedter:jcalendar:1.4'
+  // https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
+  implementation 'com.microsoft.sqlserver:mssql-jdbc:11.2.3.jre17'
+  // https://mvnrepository.com/artifact/com.toedter/jcalendar
+  implementation 'com.toedter:jcalendar:1.4'
 
-    // https://mvnrepository.com/artifact/org.jfree/jfreechart
-    implementation 'org.jfree:jfreechart:1.5.4'
+  // https://mvnrepository.com/artifact/org.jfree/jfreechart
+  implementation 'org.jfree:jfreechart:1.5.4'
 
-    // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
-    implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
+  // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
+  implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
 
-    // https://mvnrepository.com/artifact/org.projectlombok/lombok
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-// https://mvnrepository.com/artifact/com.itextpdf/itextpdf
-    implementation 'com.itextpdf:itextpdf:5.5.13.3'
+  // https://mvnrepository.com/artifact/org.projectlombok/lombok
+  compileOnly 'org.projectlombok:lombok:1.18.30'
 
-    implementation('org.glassfish.jaxb:jaxb-runtime:3.0.2')
-    implementation('org.hibernate:hibernate-core:6.0.2.Final')
-    implementation('org.glassfish.jaxb:jaxb-runtime:3.0.2')
+  implementation('org.glassfish.jaxb:jaxb-runtime:3.0.2')
+  implementation('org.hibernate:hibernate-core:6.0.2.Final')
+  implementation('org.glassfish.jaxb:jaxb-runtime:3.0.2')
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+// https://mvnrepository.com/artifact/com.opencsv/opencsv
+  implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1'
+  // https://mvnrepository.com/artifact/com.itextpdf/itextpdf
+  implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.3'
+
 }
 
 test {
-    useJUnitPlatform()
-}
+useJUnitPlatform()}
