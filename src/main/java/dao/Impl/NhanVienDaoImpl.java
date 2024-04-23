@@ -12,15 +12,16 @@ import jakarta.persistence.Persistence;
 
 import java.io.*;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NhanVienDaoImpl implements NhanVienDAO {
+public class NhanVienDaoImpl extends UnicastRemoteObject implements NhanVienDAO {
     private static final long serialVersionUID = 1L;
     private EntityManager em;
-    EntityTransaction tx;
+    private EntityTransaction tx;
 
-    public NhanVienDaoImpl() {
+    public NhanVienDaoImpl() throws RemoteException{
         em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
     }
 
@@ -33,7 +34,7 @@ public class NhanVienDaoImpl implements NhanVienDAO {
     }
 
     @Override
-    public boolean createNhanVien(NhanVien nv) {
+    public boolean createNhanVien(NhanVien nv) throws RemoteException {
         tx = em.getTransaction();
         try {
             tx.begin();
@@ -48,7 +49,7 @@ public class NhanVienDaoImpl implements NhanVienDAO {
     }
 
     @Override
-    public boolean updateNhanVien(NhanVien nv, String maNV) {
+    public boolean updateNhanVien(NhanVien nv, String maNV)throws RemoteException {
         tx = em.getTransaction();
         try {
             tx.begin();

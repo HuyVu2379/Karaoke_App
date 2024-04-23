@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.ProcessHandle.Info;
+import java.rmi.RemoteException;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,7 +54,7 @@ public class GD_HuyDatPhongCho extends JPanel implements ActionListener {
 	private JTextField txtTimKiem;
 	private JButton btnTimKiem;
 
-	public GD_HuyDatPhongCho() {
+	public GD_HuyDatPhongCho() throws RemoteException {
 		setBackground(new Color(255, 255, 255));
 		pdpDAO = new PhieuDatPhongImpl();
 		setSize(1000, 700);
@@ -151,21 +152,41 @@ public class GD_HuyDatPhongCho extends JPanel implements ActionListener {
 		Object o = e.getSource();
 		if (o.equals(btnXoaPhieu)) {
 			if (maHoaDonSelected != null) {
-				pdpDAO.xoaPhieuDatPhongCho(maHoaDonSelected);
-				JOptionPane.showMessageDialog(null, "Hủy đặt phòng chờ thành công!");
+                try {
+                    pdpDAO.xoaPhieuDatPhongCho(maHoaDonSelected);
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+                JOptionPane.showMessageDialog(null, "Hủy đặt phòng chờ thành công!");
 			} else {
 				JOptionPane.showMessageDialog(this, "Hãy chọn một phòng để hủy", "Thông báo",
 						JOptionPane.WARNING_MESSAGE);
 			}
-			TimKiem();
-		} else if (o.equals(btnXoaTatCa)) {
-			xoaTatCaPhieu();
-			TimKiem();
-		} else if (o.equals(btnThoat)) {
+            try {
+                TimKiem();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        } else if (o.equals(btnXoaTatCa)) {
+            try {
+                xoaTatCaPhieu();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+            try {
+                TimKiem();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        } else if (o.equals(btnThoat)) {
 			JOptionPane.getRootFrame().dispose();
 		} else if (o.equals(btnTimKiem)) {
-			TimKiem();
-		}
+            try {
+                TimKiem();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
 
 	}
 
@@ -185,7 +206,7 @@ public class GD_HuyDatPhongCho extends JPanel implements ActionListener {
 		});
 	}
 
-	public void xoaTatCaPhieu() {
+	public void xoaTatCaPhieu() throws RemoteException {
 		List<String> pdpList = new ArrayList();
 		int n = table.getRowCount();
 		for (int i = 0; i < n; i++) {
@@ -194,7 +215,7 @@ public class GD_HuyDatPhongCho extends JPanel implements ActionListener {
 		JOptionPane.showMessageDialog(null, "Hủy đặt phòng chờ thành công!");
 	}
 
-	public void TimKiem() {
+	public void TimKiem() throws RemoteException {
 		model.setRowCount(0);
 		List<String[]> list = pdpDAO.timKiemPhieuDatPhong(txtTimKiem.getText());
 		for (String[] s : list) {

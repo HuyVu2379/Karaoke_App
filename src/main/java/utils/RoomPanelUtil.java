@@ -21,7 +21,7 @@ public class RoomPanelUtil {
     static Calendar currentTime = Calendar.getInstance();
     static int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
 
-    public static List<JPanel> createPhongPanels(List<Phong> listPhong, PhongPanelClickListener listener) {
+    public static List<JPanel> createPhongPanels(List<Phong> listPhong, PhongPanelClickListener listener) throws RemoteException {
         HoaDonDAO hoaDonDao = new HoaDonImpl();
         List<HoaDon> listHoaDon = null;
         try {
@@ -137,7 +137,11 @@ public class RoomPanelUtil {
         dichVuPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                listener.onDichVuPanelClicked(dichVu);
+                try {
+                    listener.onDichVuPanelClicked(dichVu);
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
 
             @Override

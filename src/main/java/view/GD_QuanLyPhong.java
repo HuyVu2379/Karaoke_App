@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
+import dao.Impl.LoaiPhongDaoImpl;
 import dao.Impl.PhongImpl;
 import dao.LoaiPhongDAO;
 import dao.PhongDAO;
@@ -53,11 +55,11 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
     private List<Phong> listPhong;
     private List<TrangThaiPhong> listTrangThai;
 
-    public GD_QuanLyPhong() {
+    public GD_QuanLyPhong() throws RemoteException {
         createGUI();
     }
 
-    private void createGUI() {
+    private void createGUI() throws RemoteException {
 //		setTitle("Quản lý phòng");
         setSize(1000, 700);
 //		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -228,25 +230,25 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
         }
     }
 
-    private void loadLoaiPhong() {
-        LoaiPhongDAO dao = new LoaiPhongDAO();
+    private void loadLoaiPhong() throws RemoteException {
+        LoaiPhongDAO dao = new LoaiPhongDaoImpl();
         List<LoaiPhong> listLoaiPhong = dao.getAllLoaiPhong();
         for (LoaiPhong loaiPhong : listLoaiPhong) {
             cmbLoaiPhong.addItem(loaiPhong.getTenLoaiPhong());
         }
     }
 
-    private void initRoomData() {
+    private void initRoomData() throws RemoteException {
         listPhong = new ArrayList<>();
         dao = new PhongImpl();
         listPhong = getAllRoom();
     }
 
-    private List<Phong> getAllRoom() {
+    private List<Phong> getAllRoom() throws RemoteException {
         return dao.getAllRoom();
     }
 
-    private void createListRoom() {
+    private void createListRoom() throws RemoteException {
         pnListRoom = new JPanel();
         pnListRoom.setBackground(new Color(255, 255, 255));
         scroll = new JScrollPane(pnListRoom);
@@ -261,7 +263,7 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
         loadRoom(listPhong);
     }
 
-    private void loadRoom(List<Phong> rooms) {
+    private void loadRoom(List<Phong> rooms) throws RemoteException {
         pnListRoom.removeAll();
         List<JPanel> phongPanel = RoomPanelUtil.createPhongPanels(rooms, this);
         phongPanel.forEach(pnListRoom::add);
@@ -280,7 +282,7 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
         cmbLoaiTimKiem.setSelectedIndex(0);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         new GD_QuanLyPhong().setVisible(true);
     }
 
@@ -295,7 +297,7 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
         btnCapNhat.setEnabled(true);
     }
 
-    private Phong getInput() {
+    private Phong getInput() throws RemoteException {
         if (txtMaPhong.getText().equals("")) {
             JOptionPane.showMessageDialog(this, "Hãy nhập vào mã phòng", "Thông báo",
                     JOptionPane.WARNING_MESSAGE);
@@ -309,7 +311,7 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
                     JOptionPane.WARNING_MESSAGE);
             return null;
         }
-        LoaiPhongDAO dao = new LoaiPhongDAO();
+        LoaiPhongDAO dao = new LoaiPhongDaoImpl();
         String maPhong = txtMaPhong.getText();
         String tenPhong = txtTenPhong.getText();
         int sucChua = (int) spnSoLuong.getValue();
@@ -319,7 +321,7 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
         return new Phong(maPhong, loaiPhong, tenPhong, sucChua, trangThai);
     }
 
-    private void capNhatPhong(Phong phong) {
+    private void capNhatPhong(Phong phong) throws RemoteException {
         if (dao.updateRoom(phong)) {
             List<Phong> rooms = getAllRoom();
             loadRoom(rooms);
@@ -328,7 +330,7 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
             JOptionPane.showMessageDialog(this, "Cập nhật không thành công!");
     }
 
-    private void themPhong(Phong phong) {
+    private void themPhong(Phong phong) throws RemoteException {
         if (dao.addRoom(phong)) {
             List<Phong> rooms = getAllRoom();
             loadRoom(rooms);
@@ -337,8 +339,8 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
             JOptionPane.showMessageDialog(this, "Thêm thất bại thành công!");
     }
 
-    private void timKiemPhong() {
-        LoaiPhongDAO daoLoaiPhong = new LoaiPhongDAO();
+    private void timKiemPhong() throws RemoteException {
+        LoaiPhongDAO daoLoaiPhong = new LoaiPhongDaoImpl();
         if (cmbLoaiTimKiem.getSelectedIndex() == 0) {
             List<Phong> rooms = getAllRoom();
             loadRoom(rooms);
@@ -377,11 +379,23 @@ public class GD_QuanLyPhong extends JPanel implements ActionListener, PhongPanel
         if (o.equals(btnXoaTrang)) {
             clearInput();
         } else if (o.equals(btnCapNhat)) {
-            capNhatPhong(getInput());
+            try {
+                capNhatPhong(getInput());
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (o.equals(btnThem)) {
-            themPhong(getInput());
+            try {
+                themPhong(getInput());
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (o.equals(btnTim)) {
-            timKiemPhong();
+            try {
+                timKiemPhong();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }

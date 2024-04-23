@@ -2,12 +2,14 @@ package entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Entity
 @Table(name = "ChiTietDatDichVu")
-public class ChiTietDatDichVu {
+public class ChiTietDatDichVu implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int soLuong;
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

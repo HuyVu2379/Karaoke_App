@@ -7,19 +7,22 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhongImpl implements PhongDAO {
+public class PhongImpl extends UnicastRemoteObject implements PhongDAO {
+    private static final long serialVersionUID = 1L;
     private EntityManager em;
     private EntityTransaction tx;
 
-    public PhongImpl() {
+    public PhongImpl() throws RemoteException {
         em = Persistence.createEntityManagerFactory("mssql").createEntityManager();
     }
 
     @Override
-    public boolean addRoom(Phong phong) {
+    public boolean addRoom(Phong phong) throws RemoteException{
         tx = em.getTransaction();
         try {
             tx.begin();
@@ -34,7 +37,7 @@ public class PhongImpl implements PhongDAO {
     }
 
     @Override
-    public boolean updateRoom(Phong phong) {
+    public boolean updateRoom(Phong phong) throws RemoteException{
         tx = em.getTransaction();
         try {
             tx.begin();
@@ -49,26 +52,26 @@ public class PhongImpl implements PhongDAO {
     }
 
     @Override
-    public List<Phong> getAllRoom() {
+    public List<Phong> getAllRoom() throws RemoteException{
         String query = "SELECT p FROM Phong p left join p.loaiPhong";
         return em.createQuery(query, Phong.class).getResultList();
     }
 
     @Override
-    public List<Phong> getAllVacantRoom() {
+    public List<Phong> getAllVacantRoom() throws RemoteException{
         String query = "SELECT p FROM Phong p WHERE p.trangThai = enums.TrangThaiPhong.PHONG_TRONG";
         return em.createQuery(query, Phong.class).getResultList();
     }
 
     @Override
-    public List<Phong> getRoomByNameAndType(String name, LoaiPhong type) {
+    public List<Phong> getRoomByNameAndType(String name, LoaiPhong type) throws RemoteException {
         String query = "{call GetPhongByTenAndLoaiPhong(?, ?)}";
         List<Phong> phongList = new ArrayList<>();
         return em.createNativeQuery(query, Phong.class).setParameter(1, name).setParameter(2, type.getMaLoaiPhong()).getResultList();
     }
 
     @Override
-    public List<Phong> getRoomByStatus(String status) {
+    public List<Phong> getRoomByStatus(String status) throws RemoteException {
         String query = "SELECT * FROM PhongView WHERE trangThai = ?";
         return em.createNativeQuery(query, Phong.class)
                 .setParameter(1, status)
@@ -76,7 +79,7 @@ public class PhongImpl implements PhongDAO {
     }
 
     @Override
-    public List<Phong> getRoomByType(LoaiPhong type) {
+    public List<Phong> getRoomByType(LoaiPhong type) throws RemoteException{
         String query = "SELECT * FROM PhongView WHERE LoaiPhong_MaLoaiPhong = ?";
         return em.createNativeQuery(query, LoaiPhong.class)
                 .setParameter(1, type.getMaLoaiPhong())
@@ -84,7 +87,7 @@ public class PhongImpl implements PhongDAO {
     }
 
     @Override
-    public List<Phong> getRoomByName(String name) {
+    public List<Phong> getRoomByName(String name) throws RemoteException{
         String query = "SELECT * FROM PhongView WHERE tenPhong = ?";
         return em.createNativeQuery(query, Phong.class)
                 .setParameter(1, name)
@@ -92,13 +95,13 @@ public class PhongImpl implements PhongDAO {
     }
 
     @Override
-    public List<Phong> getRoomLoaiPhongLichSuaGiaByConditionTime() {
+    public List<Phong> getRoomLoaiPhongLichSuaGiaByConditionTime() throws RemoteException{
         String query = "SELECT * FROM PhongLoaiPhongLichSuaGiaByConditionTimeView";
         return em.createNativeQuery(query, Phong.class).getResultList();
     }
 
     @Override
-    public List<Phong> getRoomByCondition(String trangThai, String maLoaiPhong, String tenPhong) {
+    public List<Phong> getRoomByCondition(String trangThai, String maLoaiPhong, String tenPhong) throws RemoteException{
         String storedProcedure = "{call GetPhongByCondition(?, ?, ?)}";
         return em.createNativeQuery(storedProcedure, Phong.class)
                 .setParameter(1, trangThai)
@@ -108,7 +111,7 @@ public class PhongImpl implements PhongDAO {
     }
 
     @Override
-    public List<Phong> getNewHoaDonByTenKhachHang(String tenKhachHang) {
+    public List<Phong> getNewHoaDonByTenKhachHang(String tenKhachHang) throws RemoteException{
         String query = "{call GetNewHoaDonByTenKhachHang(?)}";
         return em.createNativeQuery(query, Phong.class)
                 .setParameter(1, tenKhachHang)
@@ -116,7 +119,7 @@ public class PhongImpl implements PhongDAO {
     }
 
     @Override
-    public boolean updateRoomStatus(String maHoaDon, String maPhong) {
+    public boolean updateRoomStatus(String maHoaDon, String maPhong) throws RemoteException{
         tx = em.getTransaction();
         return false;
     }

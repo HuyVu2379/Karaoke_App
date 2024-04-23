@@ -23,7 +23,7 @@ import java.util.List;
 
 public class PhieuDatPhongTest {
     public static void main(String[] args) {
-        PhieuDatPhongDAO phieuDatPhongDAO = new PhieuDatPhongImpl();
+//        PhieuDatPhongDAO phieuDatPhongDAO = new PhieuDatPhongImpl();
 //        boolean test1 = phieuDatPhongDAO.bookKaraokeRoom("KH.041123.001", "NV230001", "P0101    ", Time.valueOf("00:00:00"), Date.valueOf("2024-04-21"));
 //        if(test1 == true){
 //            System.out.println("Test 1 passed");

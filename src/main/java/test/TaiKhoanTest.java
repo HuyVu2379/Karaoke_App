@@ -16,8 +16,8 @@ import dao.TaiKhoanDAO;
 
 public class TaiKhoanTest {
     public static void main(String[] args) {
-        TaiKhoanDAO taiKhoanDAO = new TaiKhoanImpl();
-//        System.out.println(taiKhoanDAO.getAllTaiKhoan());
-           System.out.println(taiKhoanDAO.getTaiKhoan("luongtandat", "Dat123456@"));
+//        TaiKhoanDAO taiKhoanDAO = new TaiKhoanImpl();
+////        System.out.println(taiKhoanDAO.getAllTaiKhoan());
+//           System.out.println(taiKhoanDAO.getTaiKhoan("luongtandat", "Dat123456@"));
     }
 }

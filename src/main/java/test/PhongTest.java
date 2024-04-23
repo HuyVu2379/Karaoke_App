@@ -22,8 +22,8 @@ import java.util.List;
 
 public class PhongTest {
     public static void main(String[] args) {
-        PhongDAO phongDAO = new PhongImpl();
-        LoaiPhong loaiPhong = new LoaiPhong("LP001", "Phòng đơn", TrangThaiLoaiPhong.HIEU_LUC);
+//        PhongDAO phongDAO = new PhongImpl();
+//        LoaiPhong loaiPhong = new LoaiPhong("LP001", "Phòng đơn", TrangThaiLoaiPhong.HIEU_LUC);
 //        Phong phong = new Phong("P0107", loaiPhong, "02.006", 8, TrangThaiPhong.PHONG_CHO);
 //        if(phongDAO.addRoom(phong)) {
 //            System.out.println("Thêm phòng thành công");
@@ -74,11 +74,11 @@ public class PhongTest {
 //        for (Phong p : phongList) {
 //            System.out.println(p);
 //        }
-        if(phongDAO.updateRoomStatus("HD001", "P0107")) {
-            System.out.println("Cập nhật trạng thái phòng thành công");
-        } else {
-            System.out.println("Cập nhật trạng thái phòng thất bại");
-        }
+//        if(phongDAO.updateRoomStatus("HD001", "P0107")) {
+//            System.out.println("Cập nhật trạng thái phòng thành công");
+//        } else {
+//            System.out.println("Cập nhật trạng thái phòng thất bại");
+//        }
     }
 
 

@@ -2,6 +2,7 @@ package view;
 
 import com.toedter.calendar.JDateChooser;
 import dao.HoaDonDAO;
+import dao.Impl.HoaDonImpl;
 import entity.ChiTietDatDichVu;
 import entity.HoaDon;
 import entity.PhieuDatPhong;
@@ -15,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.rmi.RemoteException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +40,14 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
     private JLabel lblSelect;
     private JComboBox<String> cbSelect;
 
-    public GD_QuanLyHoaDon() {
+    public GD_QuanLyHoaDon() throws RemoteException {
         setSize(1000, 700);
-
-        hoaDonDAO = new HoaDonDAO();
+        hoaDonDAO = new HoaDonImpl();
         currentPageNumber = 1;
         createGUI();
     }
 
-    public void initData() {
+    public void initData() throws RemoteException {
         invoices = hoaDonDAO.getHoaDonPaged(currentPageNumber, ROWS_PER_PAGE);
         loadInvoiceData(invoices);
     }
@@ -62,7 +63,7 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
         }
     }
 
-    private void loadInvoiceDetailData(HoaDon invoice) {
+    private void loadInvoiceDetailData(HoaDon invoice) throws RemoteException {
         modelInvoiceServiceDetail.setRowCount(0);
         modelInvoiceDetail.setRowCount(0);
         currentInvoice = hoaDonDAO.getHoaDonByMaHoaDon(invoice.getMaHoaDon());
@@ -86,7 +87,7 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
         }
     }
 
-    private void createGUI() {
+    private void createGUI() throws RemoteException {
         setLayout(new BorderLayout());
 
         JPanel TitlePanel = new JPanel();
@@ -305,11 +306,19 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == btnNext || source == btnPrevious) {
-            handlePageNavigation(source);
+            try {
+                handlePageNavigation(source);
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source == cbSelect) {
             handleComboBoxSelection();
         } else if (source == btnTimKiem) {
-            handleSearch();
+            try {
+                handleSearch();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (source == btnXuatHoaDon) {
 //            boolean success = PdfExportUtil.exportInvoiceToPdf(currentInvoice);
 
@@ -321,14 +330,14 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
         }
     }
 
-    private void handleSearch() {
+    private void handleSearch() throws RemoteException {
         int selectedOption = cbSelect.getSelectedIndex();
         invoices = getInvoicesForPage(1, selectedOption);
         lblCurrentPageNumber.setText("1");
         loadInvoiceData(invoices);
     }
 
-    private void handlePageNavigation(Object source) {
+    private void handlePageNavigation(Object source) throws RemoteException {
         int targetPageNumber = (source == btnNext) ? currentPageNumber + 1 : currentPageNumber - 1;
         int selectedOption = cbSelect.getSelectedIndex();
 
@@ -336,10 +345,10 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
         updateAndLoadInvoices(targetPageNumber);
     }
 
-    private List<HoaDon> getInvoicesForPage(int targetPageNumber, int selectedOption) {
+    private List<HoaDon> getInvoicesForPage(int targetPageNumber, int selectedOption) throws RemoteException {
         switch (selectedOption) {
             case 0:
-                return hoaDonDAO.getHoaDonPaged(targetPageNumber, ROWS_PER_PAGE);
+                return hoaDonDAO.getHoaDonPaged(targetPageNumber,ROWS_PER_PAGE);
             case 1:
                 return hoaDonDAO.getHoaDonPagedByMaHoaDon(txtMaHoaDon.getText(), targetPageNumber, ROWS_PER_PAGE);
             case 2:
@@ -397,7 +406,11 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
                 int selectedRow = tableInvoice.getSelectedRow();
                 if (selectedRow != -1) {
                     currentInvoice = invoices.get(selectedRow);
-                    loadInvoiceDetailData(currentInvoice);
+                    try {
+                        loadInvoiceDetailData(currentInvoice);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         });

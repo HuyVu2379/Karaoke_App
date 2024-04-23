@@ -1,6 +1,8 @@
 package view;
 
 import com.toedter.calendar.JDateChooser;
+import dao.Impl.KhachHangDaoImpl;
+import dao.Impl.LoaiPhongDaoImpl;
 import dao.Impl.PhieuDatPhongImpl;
 import dao.Impl.PhongImpl;
 import dao.KhachHangDAO;
@@ -20,6 +22,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,11 +58,11 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
     private NhanVien nhanVien;
     private String ph;
 
-    public GD_DatPhongCho(NhanVien currentNhanVien) {
+    public GD_DatPhongCho(NhanVien currentNhanVien) throws RemoteException {
         nhanVien = currentNhanVien;
         phongDAO = new PhongImpl();
-        loaiPhongDAO = new LoaiPhongDAO();
-        khachHangDAO = new KhachHangDAO();
+        loaiPhongDAO = new LoaiPhongDaoImpl();
+        khachHangDAO = new KhachHangDaoImpl();
         phieuDatPhongDAO = new PhieuDatPhongImpl();
         initGUI();
     }
@@ -71,7 +74,7 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
         setBackground(new Color(255, 255, 255));
     }
 
-    private void initGUI() {
+    private void initGUI() throws RemoteException {
         setupFrame();
 
         addPanelNorth();
@@ -81,7 +84,7 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
         addPanelSouth();
     }
 
-    private void addPanelCenter() {
+    private void addPanelCenter() throws RemoteException {
         pnCenter = new JPanel();
         pnCenter.setBackground(new Color(255, 255, 255));
         getContentPane().add(pnCenter, BorderLayout.CENTER);
@@ -95,7 +98,7 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
 
     }
 
-    private void addPanelRoom() {
+    private void addPanelRoom() throws RemoteException {
 
         pnRoomScrollPane = new JPanel();
         pnRoomScrollPane.setBackground(new Color(255, 255, 255));
@@ -142,7 +145,7 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
 
     }
 
-    private void addForm() {
+    private void addForm() throws RemoteException {
         JPanel pnForm = new JPanel();
         pnForm.setBackground(new Color(255, 255, 255));
         pnCenter.add(pnForm, BorderLayout.NORTH);
@@ -347,11 +350,11 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
         rbtnToday.addActionListener(this);
     }
 
-    private void initData() {
+    private void initData() throws RemoteException {
         listPhong = phongDAO.getAllVacantRoom();
     }
 
-    private void loadRooms(List<Phong> newRooms) {
+    private void loadRooms(List<Phong> newRooms) throws RemoteException {
         pnRoomScrollPane.removeAll();
         List<JPanel> roomPanels = RoomPanelUtil.createPhongPanels(newRooms, this);
         roomPanels.forEach(pnRoomScrollPane::add);
@@ -393,7 +396,11 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
         Object o = e.getSource();
         if (o.equals(btnCheck)) {
             if (txtNumber.getText().length() > 0) {
-                kh = khachHangDAO.getCustomerByPhoneNumber(txtNumber.getText());
+                try {
+                    kh = khachHangDAO.getCustomerByPhoneNumber(txtNumber.getText());
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
                 if (kh == null) {
                     JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng", "Thông báo",
                             JOptionPane.WARNING_MESSAGE);
@@ -407,8 +414,16 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
             }
         }
         if (o.equals(btnSearch)) {
-            listPhong = phongDAO.getRoomByNameAndType(txtNameRoom.getText(), (LoaiPhong) cbType.getSelectedItem());
-            loadRooms(listPhong);
+            try {
+                listPhong = phongDAO.getRoomByNameAndType(txtNameRoom.getText(), (LoaiPhong) cbType.getSelectedItem());
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+            try {
+                loadRooms(listPhong);
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }
         if (o.equals(rbtnToday)) {
             Calendar calendar = Calendar.getInstance();
@@ -438,7 +453,7 @@ public class GD_DatPhongCho extends JFrame implements PhongPanelClickListener, A
                     full = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(timeFull);
                     booking = phieuDatPhongDAO.bookRoomBefore(kh.getMaKhachHang(), nhanVien.getMaNhanVien(),
                             ph, new Time(full.getTime()), new java.sql.Date(full.getTime()));
-                } catch (ParseException e1) {
+                } catch (ParseException | RemoteException e1) {
                     e1.printStackTrace();
                 }
                 if (booking) {
